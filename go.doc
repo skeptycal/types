@@ -1,0 +1,14 @@
+package types // import "github.com/skeptycal/types"
+
+const NL = "\n" ...
+type Any interface{}
+type Cosa struct{}
+type Enabler interface{ ... }
+type Formatter interface{ ... }
+type GetSetter interface{ ... }
+type Locker interface{ ... }
+type Printer interface{ ... }
+type State interface{ ... }
+type StringWriter interface{ ... }
+type Stringer interface{ ... }
+type Writer interface{ ... }
