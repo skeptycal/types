@@ -1,0 +1,44 @@
+package types // import "github.com/skeptycal/types"
+
+const NL = "\n" ...
+var IsTerminal bool = isTerminal()
+var ValueOf = reflect.ValueOf
+func CPUOptions() string
+func Fields(a Any) map[string]reflect.Value
+func HasAVX2() bool
+func Kind(a Any) reflect.Kind
+func TerminalExample()
+func NewDict(name string, protected bool) *dict
+type Any interface{}
+type AnyMap map[Any]Any
+type Closer interface{ ... }
+type ColumnType = sql.ColumnType
+type ColumnTyper interface{ ... }
+type Connecter interface{ ... }
+type Conner interface{ ... }
+type Cosa struct{}
+type Cruder interface{ ... }
+type DB interface{}
+type Dict interface{ ... }
+type Enabler interface{ ... }
+type Errer interface{ ... }
+type Formatter interface{ ... }
+type GetSetter interface{ ... }
+type Locker interface{ ... }
+type Printer interface{ ... }
+type Protector interface{ ... }
+type Result interface{ ... }
+type Row = sql.Row
+type Rower interface{ ... }
+type Rows = sql.Rows
+type Rowser interface{ ... }
+type Scanner interface{ ... }
+type Slicer interface{ ... }
+type State interface{ ... }
+type Stmter interface{ ... }
+type StringWriter interface{ ... }
+type Stringer interface{ ... }
+type TxOptions = sql.TxOptions
+type Txer interface{ ... }
+type Type = reflect.Type
+type Writer interface{ ... }

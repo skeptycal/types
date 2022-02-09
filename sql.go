@@ -14,8 +14,9 @@ type (
 	Row        = sql.Row
 	Rows       = sql.Rows
 	ColumnType = sql.ColumnType
+	TxOptions  = sql.TxOptions
 
-	DB
+	DB interface{}
 
 	Conner interface {
 		PingContext(ctx context.Context) error
