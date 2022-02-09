@@ -1,6 +1,20 @@
 package types
 
+// withLock runs fn while holding lk.
+func withLock(lk Locker, fn func()) {
+	defer lk.Unlock() // in case fn panics
+	lk.Lock()
+	fn()
+}
+
 type (
+	Errer interface {
+		Err() error
+	}
+
+	Closer interface {
+		Close() error
+	}
 
 	// An Enabler represents an object that can be enabled or disabled.
 	Enabler interface {
@@ -8,22 +22,89 @@ type (
 		Disable()
 	}
 
+	// Protector is used when an object needs to be protected or unprotected (inspired by the "write-protect" tabs of floppy disks)
+	Protector interface {
+		Protect()
+		UnProtect()
+	}
+
 	// A GetSetter represents an object that can be accessed using
 	// Get and Set methods to access an underlying map.
+	//
+	// Example methods:
+	//  func (p *padding) Get(key Any) (Any, error) {
+	//		// TODO get the value that matches the key
+	//  	return nil, nil
+	//  }
+	//  func (p *padding) Set(key, value Any) error {
+	//		// TODO set the value that matches the key
+	//  	return nil
+	//  }
 	GetSetter interface {
 		Get(key Any) (Any, error)
 		Set(key Any, value Any) error
 	}
 
+	// Slicer returns the slice of keys and values that are
+	// asoociated with the underlying data structure.
+	//
+	// Example methods:
+	// 	func (d *dict) Keys() []Any {
+	//		// TODO return a list of keys
+	// 		keys := make([]Any, len(d.m))
+	//	 	for k := range d.m {
+	//	 		keys = append(keys, k)
+	//	 	}
+	//	 	return keys
+	//	 }
+	//	 func (d *dict) Values() []Any {
+	//		// TODO return a list of values
+	//	 	values := make([]Any, len(d.m))
+	//	 	for _, v := range d.m {
+	//	 		values = append(values, v)
+	//	 	}
+	//	 	return values
+	//	 }
+	Slicer interface {
+		Keys() []Any
+		Values() []Any
+	}
+
 	// A Printer implements common printing functions.
+	//
+	// Example methods:
+	// 	func (p *padding) Print(args ...interface{}) (n int, err error) {
+	//		// TODO Print unformatted args
+	// 		return n, err
+	// 	}
+	// 	func (p *padding) Println(args ...interface{}) (n int, err error) {
+	//		// TODO Print unformatted args with line break (NL)
+	// 		return n, err
+	// 	}
+	// 	func (p *padding) Printf(format string, args ...interface{}) (n int, err error) {
+	//		// TODO Print formatted args
+	// 		return n, err
+	// 	}
 	Printer interface {
 		Print(args ...interface{}) (n int, err error)
 		Println(args ...interface{}) (n int, err error)
 		Printf(format string, args ...interface{}) (n int, err error)
 	}
+
+	// Dict is a dictionary used to store keys and values of any type.
+	// It is not concurrent-safe.
+	Dict interface {
+		Delete(key Any) error
+
+		GetSetter
+		Protector
+		Slicer
+		Stringer
+	}
 )
 
 //* Interfaces from standard library for reference.
+// Copied here to avoid larger dependencies.
 type (
 
 	// Stringer is implemented by any value that has a String method,
