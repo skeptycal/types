@@ -1,12 +1,5 @@
 package types
 
-// withLock runs fn while holding lk.
-func withLock(lk Locker, fn func()) {
-	defer lk.Unlock() // in case fn panics
-	lk.Lock()
-	fn()
-}
-
 type (
 	Errer interface {
 		Err() error
@@ -25,7 +18,7 @@ type (
 	// Protector is used when an object needs to be protected or unprotected (inspired by the "write-protect" tabs of floppy disks)
 	Protector interface {
 		Protect()
-		UnProtect()
+		Unprotect()
 	}
 
 	// A GetSetter represents an object that can be accessed using

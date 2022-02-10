@@ -1,6 +1,12 @@
 package types
 
-import "reflect"
+import (
+	"reflect"
+
+	"github.com/skeptycal/errorlogger"
+)
+
+var log = errorlogger.Log
 
 type (
 

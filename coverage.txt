@@ -1,1 +1,46 @@
 
+mode: atomic
+github.com/skeptycal/types/terminal.go:18.24,20.2 1 3
+github.com/skeptycal/types/terminal.go:24.24,30.39 5 1
+github.com/skeptycal/types/terminal.go:30.39,32.3 1 0
+github.com/skeptycal/types/terminal.go:32.8,32.52 1 1
+github.com/skeptycal/types/terminal.go:32.52,34.3 1 0
+github.com/skeptycal/types/terminal.go:34.8,36.3 1 1
+github.com/skeptycal/types/cpuoptions.go:24.31,26.2 1 0
+github.com/skeptycal/types/cpuoptions.go:28.45,32.32 2 0
+github.com/skeptycal/types/cpuoptions.go:36.2,46.25 4 0
+github.com/skeptycal/types/cpuoptions.go:53.2,53.10 1 0
+github.com/skeptycal/types/cpuoptions.go:32.32,34.3 1 0
+github.com/skeptycal/types/cpuoptions.go:46.25,51.3 3 0
+github.com/skeptycal/types/cpuoptions.go:56.43,69.28 3 0
+github.com/skeptycal/types/cpuoptions.go:81.2,81.10 1 0
+github.com/skeptycal/types/cpuoptions.go:69.28,70.34 1 0
+github.com/skeptycal/types/cpuoptions.go:70.34,71.33 1 0
+github.com/skeptycal/types/cpuoptions.go:71.33,72.34 1 0
+github.com/skeptycal/types/cpuoptions.go:72.34,77.6 2 0
+github.com/skeptycal/types/cpuoptions.go:84.26,88.32 3 0
+github.com/skeptycal/types/cpuoptions.go:92.2,92.20 1 0
+github.com/skeptycal/types/cpuoptions.go:88.32,90.3 1 0
+github.com/skeptycal/types/cpuoptions.go:95.21,97.2 1 0
+github.com/skeptycal/types/dict.go:16.49,23.2 1 0
+github.com/skeptycal/types/dict.go:25.28,27.21 2 0
+github.com/skeptycal/types/dict.go:30.2,30.13 1 0
+github.com/skeptycal/types/dict.go:27.21,29.3 1 0
+github.com/skeptycal/types/dict.go:33.30,35.21 2 0
+github.com/skeptycal/types/dict.go:38.2,38.15 1 0
+github.com/skeptycal/types/dict.go:35.21,37.3 1 0
+github.com/skeptycal/types/dict.go:41.41,42.27 1 0
+github.com/skeptycal/types/dict.go:45.2,45.50 1 0
+github.com/skeptycal/types/dict.go:42.27,44.3 1 0
+github.com/skeptycal/types/dict.go:48.41,49.17 1 0
+github.com/skeptycal/types/dict.go:52.2,52.41 1 0
+github.com/skeptycal/types/dict.go:57.2,57.60 1 0
+github.com/skeptycal/types/dict.go:49.17,51.3 1 0
+github.com/skeptycal/types/dict.go:52.41,55.3 2 0
+github.com/skeptycal/types/dict.go:60.37,61.18 1 0
+github.com/skeptycal/types/dict.go:65.2,65.50 1 0
+github.com/skeptycal/types/dict.go:61.18,64.3 2 0
+github.com/skeptycal/types/dict.go:68.25,70.2 1 0
+github.com/skeptycal/types/dict.go:72.27,74.2 1 0
+github.com/skeptycal/types/interfaces.go:4.37,8.2 3 0
+mode: atomic

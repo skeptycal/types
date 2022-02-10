@@ -1,11 +1,11 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/skeptycal/types"
 )
 
 func main() {
-
-	types.TerminalExample()
-
+	fmt.Print(types.CPUOptions())
 }
