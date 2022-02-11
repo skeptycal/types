@@ -1,8 +1,8 @@
 package types // import "github.com/skeptycal/types"
 
 const ESC = "\x1b" ...
+var NewColor = color.New ...
 var IsTerminal bool = isTerminal()
-var NewColor = color.New
 var ValueOf = reflect.ValueOf
 func CPUOptions() string
 func Contains(needle Any, haystack []Any) bool

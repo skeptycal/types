@@ -9,6 +9,7 @@ import (
 )
 
 var setupDone bool = false
+var globalString string
 
 func SetupEnv(t *testing.T) {
 	t.Helper()
@@ -32,7 +33,7 @@ func CleanupEnv(t *testing.T) {
 
 func TestWithLock(t *testing.T) {
 	lockfunc := func() {
-		fmt.Sprintf("lock time: %v", time.Now())
+		globalString = fmt.Sprintf("lock time: %v", time.Now())
 	}
 	type args struct {
 		lk Locker
