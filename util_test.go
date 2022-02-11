@@ -2,13 +2,35 @@ package types
 
 import (
 	"fmt"
+	"os"
 	"sync"
 	"testing"
 	"time"
 )
 
-func TestWithLock(t *testing.T) {
+var setupDone bool = false
 
+func SetupEnv(t *testing.T) {
+	t.Helper()
+
+	if !setupDone {
+		t.Setenv("NO_COLOR", "true")
+		setupDone = true
+	}
+}
+
+func CleanupEnv(t *testing.T) {
+	t.Helper()
+
+	if setupDone {
+		t.Cleanup(func() {
+			os.Unsetenv("NO_COLOR")
+		})
+		setupDone = false
+	}
+}
+
+func TestWithLock(t *testing.T) {
 	lockfunc := func() {
 		fmt.Sprintf("lock time: %v", time.Now())
 	}
