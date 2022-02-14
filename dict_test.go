@@ -142,3 +142,35 @@ func Test_dict_Values(t *testing.T) {
 
 	})
 }
+
+func Test_dict_Less(t *testing.T) {
+	type fields struct {
+		name      string
+		protected bool
+		m         AnyMap
+	}
+	type args struct {
+		i int
+		j int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &dict{
+				name:      tt.fields.name,
+				protected: tt.fields.protected,
+				m:         tt.fields.m,
+			}
+			if got := d.Less(tt.args.i, tt.args.j); got != tt.want {
+				t.Errorf("dict.Less() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

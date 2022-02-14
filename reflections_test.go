@@ -46,7 +46,7 @@ func TestKind(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Kind(tt.a); !reflect.DeepEqual(got, tt.want) {
+			if got := KindOf(tt.a); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Kind() = %v, want %v", got, tt.want)
 			}
 		})
@@ -101,12 +101,14 @@ func TestTypeOf(t *testing.T) {
 }
 
 func TestNewStruct(t *testing.T) {
+
 	tests := []struct {
 		name string
 		v    Any
 		want *structs.Struct
 	}{
-		{"42", Cosa{}, structs.New(Cosa{})},
+		{"Cosa", Cosa{}, structs.New(Cosa{})},
+		{"int 42", nil, nilStruct},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

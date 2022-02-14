@@ -1,10 +1,16 @@
 package types
 
 type (
+
+	// Errer processes and returns an error
 	Errer interface {
 		Err() error
 	}
 
+	// Closer is the interface that wraps the basic Close method.
+	//
+	// The behavior of Close after the first call is undefined.
+	// Specific implementations may document their own behavior.
 	Closer interface {
 		Close() error
 	}
@@ -15,7 +21,8 @@ type (
 		Disable()
 	}
 
-	// Protector is used when an object needs to be protected or unprotected (inspired by the "write-protect" tabs of floppy disks)
+	// Protector is used when an object needs to be protected or unprotected
+	// (inspired by the "write-protect" tabs of floppy disks)
 	Protector interface {
 		Protect()
 		Unprotect()
@@ -63,7 +70,8 @@ type (
 		Values() []Any
 	}
 
-	// A Printer implements common printing functions.
+	// Printer implements common printing functions similar
+	// to the standard library fmt package.
 	//
 	// Example methods:
 	// 	func (p *padding) Print(args ...interface{}) (n int, err error) {
@@ -84,15 +92,55 @@ type (
 		Printf(format string, args ...interface{}) (n int, err error)
 	}
 
-	// Dict is a dictionary used to store keys and values of any type.
-	// It is not concurrent-safe.
-	Dict interface {
-		Delete(key Any) error
+	// Fprinter implements common printing functions similar
+	// to the standard library fmt package.
+	//
+	// Example methods:
+	// 	func (p *padding) Fprint(w Writer, args ...interface{}) (n int, err error) {
+	//		// TODO Print unformatted args to Writer
+	// 		return n, err
+	// 	}
+	// 	func (p *padding) Fprintln(w Writer, args ...interface{}) (n int, err error) {
+	//		// TODO Print unformatted args to Writer with line break (NL)
+	// 		return n, err
+	// 	}
+	// 	func (p *padding) Fprintf(w Writer, format string, args ...interface{}) (n int, err error) {
+	//		// TODO Print formatted args to Writer
+	// 		return n, err
+	// 	}
+	Fprinter interface {
+		Fprint(w Writer, a ...interface{}) (n int, err error)
+		Fprintln(w Writer, a ...interface{}) (n int, err error)
+		Fprintf(w Writer, format string, a ...interface{}) (n int, err error)
+	}
 
-		GetSetter
-		Protector
-		Slicer
-		Stringer
+	// Sprinter implements common printing functions similar
+	// to the standard library fmt package.
+	//
+	// Example methods:
+	// 	func (p *padding) Sprint(args ...interface{}) string {
+	//		// TODO Print unformatted args to string
+	// 		return ""
+	// 	}
+	// 	func (p *padding) Sprintln(args ...interface{}) string {
+	//		// TODO Print unformatted args to string with line break (NL)
+	// 		return ""
+	// 	}
+	// 	func (p *padding) Sprintf(format string, args ...interface{}) string {
+	//		// TODO Print formatted args to string
+	// 		return ""
+	// 	}
+	Sprinter interface {
+		Sprint(args ...interface{}) string
+		Sprintln(args ...interface{}) string
+		Sprintf(format string, args ...interface{}) string
+	}
+
+	// DictSorter is a dictionary for types that are sortable and
+	// and implements the standard library sort.Interface methods.
+	DictSorter interface {
+		Dict
+		Sorter
 	}
 )
 
@@ -106,7 +154,7 @@ type (
 	// to any format that accepts a string or to an unformatted printer
 	// such as Print.
 	//
-	// Ref: fmt package
+	// Ref: Standard Library fmt package
 	Stringer interface {
 		String() string
 	}
@@ -115,7 +163,7 @@ type (
 	// It provides access to the io.Writer interface plus information about
 	// the flags and options for the operand's format specifier.
 	//
-	// Ref: fmt package
+	// Ref: Standard Library fmt package
 	State interface {
 		// Write is the function to call to emit formatted output to be printed.
 		Write(b []byte) (n int, err error)
@@ -132,7 +180,7 @@ type (
 	// The implementation controls how State and rune are interpreted,
 	// and may call Sprint(f) or Fprint(f) etc. to generate its output.
 	//
-	// Ref: fmt package
+	// Ref: Standard Library fmt package
 	Formatter interface {
 		Format(f State, verb rune)
 	}
@@ -147,7 +195,7 @@ type (
 	//
 	// Implementations must not retain p.
 	//
-	// Ref: io package
+	// Ref: Standard Library io package
 	Writer interface {
 		Write(p []byte) (n int, err error)
 	}
@@ -158,7 +206,7 @@ type (
 	// If w implements StringWriter, its WriteString method is invoked directly.
 	// Otherwise, w.Write is called exactly once.
 	//
-	// Ref: io package
+	// Ref: Standard Library io package
 	StringWriter interface {
 		WriteString(s string) (n int, err error)
 	}
@@ -169,9 +217,39 @@ type (
 	//	 	Unlock()
 	//	 }
 	//
-	// Ref: sync package
+	// Ref: Standard Library sync package
 	Locker interface {
 		Lock()
 		Unlock()
+	}
+
+	// An implementation of sort.Interface can be sorted by the routines in
+	// this package. The methods refer to elements of the underlying
+	// collection by integer index.
+	//
+	// Ref: Standard Library sort package
+	Sorter interface {
+		// Len is the number of elements in the collection.
+		Len() int
+
+		// Less reports whether the element with index i
+		// must sort before the element with index j.
+		//
+		// If both Less(i, j) and Less(j, i) are false,
+		// then the elements at index i and j are considered equal.
+		// Sort may place equal elements in any order in the final result,
+		// while Stable preserves the original input order of equal elements.
+		//
+		// Less must describe a transitive ordering:
+		//  - if both Less(i, j) and Less(j, k) are true, then Less(i, k) must be true as well.
+		//  - if both Less(i, j) and Less(j, k) are false, then Less(i, k) must be false as well.
+		//
+		// Note that floating-point comparison (the < operator on float32 or float64 values)
+		// is not a transitive ordering when not-a-number (NaN) values are involved.
+		// See Float64Slice.Less for a correct implementation for floating-point values.
+		Less(i, j int) bool
+
+		// Swap swaps the elements with indexes i and j.
+		Swap(i, j int)
 	}
 )

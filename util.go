@@ -38,6 +38,30 @@ func WithLock(lk Locker, fn func()) {
 	fn()
 }
 
+// IsComparable returns true if the underlying value
+// is of a type that is capable of comparisions, e.g.
+// less than, equal, greater than
+//
+// First, numeric and string values are comparable.
+//
+// Next, types that have a Len() method are considered
+// comparable based on length.
+//
+// Bools, pointers, nil, channels are not comparable.
+func IsComparable(v Any) bool {
+
+	if _, ok := ValueOf(v).Type().MethodByName("Len"); ok {
+		return true
+	}
+
+	switch v.(type) {
+	case int, uint, float64, float32, string, []byte:
+		return true
+	default:
+		return false
+	}
+}
+
 func Contains(needle Any, haystack []Any) bool {
 	for _, x := range haystack {
 		if reflect.DeepEqual(needle, x) {
