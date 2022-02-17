@@ -80,14 +80,23 @@ func (d *dict) IsSortable() bool { return false }
 // the keys in the underlying map.
 // Swap is part of sort.Interface.
 func (d *dict) Swap(i, j int) {
-	d.m[i], d.m[j] = d.m[j], d.m[i]
+	// d.m[i], d.m[j] = d.m[j], d.m[i]
 }
 
 // Less compares the values associated with
 // the values in the underlying map.
 func (d *dict) Less(i, j int) bool {
+
+	if i == j {
+		return false
+	}
+
 	vi := d.m[i]
 	vj := d.m[j]
+
+	if vi == vj {
+		return false
+	}
 
 	switch ti := vi.(type) {
 	case int:
@@ -110,6 +119,7 @@ func (d *dict) Less(i, j int) bool {
 		if tj, ok := vj.(string); ok {
 			return ti < tj
 		}
+	// case map:
 
 	default:
 		return false
@@ -117,10 +127,37 @@ func (d *dict) Less(i, j int) bool {
 	return false
 }
 
+// func compare[T constraints.Ordered](a, b T) {
+//     // works
+//     if a > b {
+//         fmt.Printf("%v is bigger than %v", a, b)
+//     }
+// }
+
+func (d *dict) Keys() []Any {
+	return d.keysSet_AllocWithCap()
+}
+
 // Keys returns a slice of keys of the underlying
 // map. If sorting is enabled with d.Enable(),
 // the keys will be sorted.
-func (d *dict) Keys() (keys []Any) {
+func (d *dict) keysAppend_DeferAllocationWithCap() []Any {
+	if len(d.m) == 0 {
+		return []Any{}
+	}
+	if len(d.m) == 1 {
+		return []Any{d.m[0]}
+	}
+
+	keys := make([]Any, 0, len(d.m))
+	for k := range d.m {
+		keys = append(keys, k)
+	}
+
+	return keys
+}
+
+func (d *dict) keysAppend_PreAllocateRedoWithCap() (keys []Any) {
 	if len(d.m) == 0 {
 		return
 	}
@@ -132,6 +169,103 @@ func (d *dict) Keys() (keys []Any) {
 	keys = make([]Any, 0, len(d.m))
 	for k := range d.m {
 		keys = append(keys, k)
+	}
+
+	return keys
+}
+
+func (d *dict) keysAppend_NoChecks_PreAllocate() (keys []Any) {
+	for k := range d.m {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
+func (d *dict) keysAppend_AllocateZero() []Any {
+	if len(d.m) == 0 {
+		return []Any{}
+	}
+	if len(d.m) == 1 {
+		return []Any{d.m[0]}
+	}
+
+	keys := make([]Any, 0)
+	for k := range d.m {
+		keys = append(keys, k)
+	}
+
+	return keys
+}
+
+func (d *dict) keysSet_AllocWithCap() []Any {
+	if len(d.m) == 0 {
+		return []Any{}
+	}
+
+	if len(d.m) == 1 {
+		return []Any{d.m[0]}
+	}
+
+	keys := make([]Any, 0, len(d.m))
+
+	i := 0
+	for k := range d.m {
+		keys[i] = k
+		i++
+	}
+
+	return keys
+}
+
+func (d *dict) keysSet_AllocZero() []Any {
+	if len(d.m) == 0 {
+		return []Any{}
+	}
+
+	if len(d.m) == 1 {
+		return []Any{d.m[0]}
+	}
+
+	keys := make([]Any, 0)
+
+	i := 0
+	for k := range d.m {
+		keys[i] = k
+		i++
+	}
+
+	return keys
+}
+
+func (d *dict) keysSet_NoChecks_AllocCap() []Any {
+	keys := make([]Any, 0, len(d.m))
+
+	i := 0
+	for k := range d.m {
+		keys[i] = k
+		i++
+	}
+
+	return keys
+}
+
+func (d *dict) keysSet_NoChecks_AllocZero() []Any {
+	keys := make([]Any, 0)
+
+	i := 0
+	for k := range d.m {
+		keys[i] = k
+		i++
+	}
+
+	return keys
+}
+func (d *dict) keysSet_NoChecks_PreAlloc() (keys []Any) {
+
+	i := 0
+	for k := range d.m {
+		keys[i] = k
+		i++
 	}
 
 	return keys

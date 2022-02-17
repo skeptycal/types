@@ -3,22 +3,45 @@ package types // import "github.com/skeptycal/types"
 const ESC = "\x1b" ...
 const KVFormatString = "%15v = %15v" ...
 var NewColor = color.New ...
-var ValueOf = reflect.ValueOf ...
+var RetVal ...
+var Now = time.Now().UTC() ...
+var CaseFunc = func(s string) string { ... }
+var Greek = charMap{ ... }
 var IsTerminal bool = isTerminal()
+var KindMaps = KindMap{ ... }
+var ValueOf = reflect.ValueOf
 func CPUOptions() string
+func CallSetGlobalReturnValue(any interface{})
 func Contains(needle Any, haystack []Any) bool
 func Count(needle Any, haystack []Any) int
+func Frequency(s string) map[byte]int
 func HasAVX2() bool
 func IsComparable(v Any) bool
+func IsOrdered(v reflect.Value) bool
 func KindOf(a Any) reflect.Kind
 func NewStruct(v Any) *structs.Struct
+func PastDay(year, month, day int) time.Time
+func RandomDate(min, max time.Time) time.Time
+func RandomString(min, max int, caseFunc func(string) string) string
+func ShowFrequency(s string) string
 func TerminalExample()
 func ToString(a Any) string
 func TypeOf(a Any) reflect.Type
 func WithLock(lk Locker, fn func())
+func GenerateRoster(n int) *roster
+func RandomStudent() *student
 type Any interface{}
 type AnyMap map[Any]Any
 type AnySlice interface{ ... }
+type Args []Any
+type Benchmark interface{ ... }
+    func NewBenchmark(name string, fn Any, args []Any) Benchmark
+type BenchmarkSet interface{ ... }
+    func NewBenchmarkSet(b *testing.B, name string, set []Benchmark) BenchmarkSet
+type BmFunc = func(b *testing.B) []reflect.Value
+    func BenchmarkFunc(fn ReFunc, args []reflect.Value) BmFunc
+type Caller interface{ ... }
+    func NewCaller(fn func(v interface{})) Caller
 type Closer interface{ ... }
 type ColumnType = sql.ColumnType
 type ColumnTyper interface{ ... }
@@ -36,15 +59,21 @@ type Formatter interface{ ... }
 type Fprinter interface{ ... }
 type GetSetter interface{ ... }
 type Kind = reflect.Kind
+type KindInfo struct{ ... }
+type KindMap map[Kind]KindInfo
+type Kinder interface{ ... }
+type List interface{ ... }
 type Locker interface{ ... }
 type Printer interface{ ... }
 type Protector interface{ ... }
+type ReFunc = func(in []reflect.Value) []reflect.Value
 type Result interface{ ... }
 type Row = sql.Row
 type Rower interface{ ... }
 type Rows = sql.Rows
 type Rowser interface{ ... }
 type Scanner interface{ ... }
+type Set interface{ ... }
 type Slicer interface{ ... }
 type Sorter interface{ ... }
 type Sprinter interface{ ... }
@@ -52,6 +81,11 @@ type State interface{ ... }
 type Stmter interface{ ... }
 type StringWriter interface{ ... }
 type Stringer interface{ ... }
+type Test interface{ ... }
+    func NewTest(name string, fn func(t *testing.T)) Test
+type TestOptioner interface{ ... }
+type TestSet interface{ ... }
+    func NewTestSet(name string, set []Test) TestSet
 type TxOptions = sql.TxOptions
 type Txer interface{ ... }
 type Type = reflect.Type

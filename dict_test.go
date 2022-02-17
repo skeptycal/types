@@ -64,6 +64,39 @@ var (
 		nil,
 	}
 )
+var (
+	dd = &dict{
+		name:        "sampledict",
+		protected:   false,
+		sortEnabled: false,
+		m:           make(AnyMap),
+	}
+
+	bms = []Benchmark{
+		NewBenchmark("keysAppend_DeferAllocationWithCap", dd.keysAppend_DeferAllocationWithCap, []Any{}),
+		NewBenchmark("keysAppend_PreAllocateRedoWithCap", dd.keysAppend_PreAllocateRedoWithCap, []Any{}),
+		NewBenchmark("keysAppend_NoChecks_PreAllocate", dd.keysAppend_NoChecks_PreAllocate, []Any{}),
+		NewBenchmark("keysAppend_AllocateZero", dd.keysAppend_AllocateZero, []Any{}),
+		NewBenchmark("keysSet_AllocZero", dd.keysSet_AllocZero, []Any{}),
+		NewBenchmark("keysSet_NoChecks_AllocCap", dd.keysSet_NoChecks_AllocCap, []Any{}),
+		NewBenchmark("keysSet_NoChecks_AllocZero", dd.keysSet_NoChecks_AllocZero, []Any{}),
+		NewBenchmark("keysSet_NoChecks_PreAlloc", dd.keysSet_NoChecks_PreAlloc, []Any{}),
+		NewBenchmark("keysSet_AllocWithCap", dd.keysSet_AllocWithCap, []Any{}),
+	}
+)
+
+var globalAny Any
+
+func bFunc(fn func() []Any) func(b *testing.B) {
+	return func(b *testing.B) { globalAny = fn }
+}
+func BenchmarkAll(b *testing.B) {
+	for _, bb := range bms {
+		for i := 0; i < b.N; i++ {
+			b.Run(bb.Name(), func(b *testing.B) { bb.Run(b) })
+		}
+	}
+}
 
 func TestNewDict(t *testing.T) {
 	for _, tt := range mapTests {
@@ -75,39 +108,39 @@ func TestNewDict(t *testing.T) {
 	}
 }
 
-func Test_dict_Keys(t *testing.T) {
-	name := "sampleAnyMap"
-	d := &dict{m: sampleAnyMap}
-	want := sampleKeys
-	for k, v := range sampleAnyMap {
-		err := d.Set(k, v)
-		if err != nil {
-			t.Errorf("Set(%v, %v) = %v", k, v, err)
-		}
-	}
+// func Test_dict_Keys(t *testing.T) {
+// 	name := "sampleAnyMap"
+// 	d := &dict{m: sampleAnyMap}
+// 	want := sampleKeys
+// 	for k, v := range sampleAnyMap {
+// 		err := d.Set(k, v)
+// 		if err != nil {
+// 			t.Errorf("Set(%v, %v) = %v", k, v, err)
+// 		}
+// 	}
 
-	t.Run(name, func(t *testing.T) {
+// 	t.Run(name, func(t *testing.T) {
 
-		got := d.Keys()
-		gotLen := len(got)
-		wantLen := len(want)
-		if gotLen != wantLen {
-			t.Errorf("dict.Keys().Len() = %v, want %v", gotLen, wantLen)
-		}
+// 		got := d.Keys()
+// 		gotLen := len(got)
+// 		wantLen := len(want)
+// 		if gotLen != wantLen {
+// 			t.Errorf("dict.Keys().Len() = %v, want %v", gotLen, wantLen)
+// 		}
 
-		for k := range sampleAnyMap {
-			if !Contains(k, want) {
-				t.Errorf("dict.Keys() does not contain %v ", k)
-				break
-			}
-			if Count(k, want) != Count(k, got) {
-				t.Errorf("dict.Keys() incorrect count: %v ", k)
-				break
-			}
-		}
+// 		for k := range sampleAnyMap {
+// 			if !Contains(k, want) {
+// 				t.Errorf("dict.Keys() does not contain %v ", k)
+// 				break
+// 			}
+// 			if Count(k, want) != Count(k, got) {
+// 				t.Errorf("dict.Keys() incorrect count: %v ", k)
+// 				break
+// 			}
+// 		}
 
-	})
-}
+// 	})
+// }
 
 func Test_dict_Values(t *testing.T) {
 	name := "sampleAnyMap"

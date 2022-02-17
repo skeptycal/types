@@ -45,18 +45,24 @@ func main() {
 		{"UnsafePointer", unsafe.Pointer(nil)},
 	}
 
+	var s []string
 	for j, tt := range tests {
-		t := reflect.TypeOf(tt.a).Elem()
-		var s []string
+		t1 := reflect.ValueOf(tt.a)
+		t := reflect.ValueOf(t1)
 
+		v := t.MethodByName("Len")
+
+		fmt.Printf("%2d: %-10v (%20v) (len: %v) methods(%v):\n", j, tt.name, t, v, t.NumMethod())
+
+		s = []string{}
 		for i := 0; i < t.NumMethod(); i++ {
-			s = append(s, t.Method(i).Name)
-			s = append(s, ", ")
+			s = append(s, t.Type().Method(i).Name)
 		}
 
-		fmt.Printf("%2d: %v (%T) methods:\n", j, tt.name, tt.a)
+		// fmt.Println(s)
 
-		fmt.Println(s)
+		_ = s
+
 		// v := ValueOf(tt.a)
 		// for i := 0; i < v.NumMethod(); i++ {
 		// 	fmt.Printf("  %v\n", v.Method(i))

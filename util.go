@@ -55,11 +55,28 @@ func IsComparable(v Any) bool {
 	}
 
 	switch v.(type) {
+	case bool:
+		return true
 	case int, uint, float64, float32, string, []byte:
 		return true
 	default:
 		return false
 	}
+}
+
+func isComparable2(v reflect.Value) bool {
+	if IsOrdered(v) {
+		return true
+	}
+	if v.Kind() == reflect.Bool {
+		return true
+	}
+	return false
+}
+
+func IsOrdered(v reflect.Value) bool {
+	return v.Kind() > 1 && v.Kind() < 17
+
 }
 
 func Contains(needle Any, haystack []Any) bool {
