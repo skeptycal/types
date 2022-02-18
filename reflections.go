@@ -8,10 +8,16 @@ import (
 
 var nilStruct = &structs.Struct{}
 
-var ValueOf = reflect.ValueOf
+func ValueOf(i interface{}) reflect.Value { return reflect.ValueOf(i) }
+func KindOf(a Any) reflect.Kind           { return ValueOf(a).Kind() }
+func TypeOf(a Any) reflect.Type {
 
-func KindOf(a Any) reflect.Kind { return ValueOf(a).Kind() }
-func TypeOf(a Any) reflect.Type { return ValueOf(a).Type() }
+	if a == nil {
+		return reflect.Type(nil)
+	}
+
+	return ValueOf(a).Type()
+}
 
 func NewStruct(v Any) *structs.Struct {
 	if KindOf(v) != reflect.Struct {

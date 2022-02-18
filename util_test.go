@@ -110,11 +110,72 @@ func TestToString(t *testing.T) {
 		{"uint 42", uint(42), "42"},
 		// {"pointer uint 42", &p, "address"},
 		{"nil", nil, "<nil>"},
+		{"Dict", NewDict("fake", false), "            key =           value"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := ToString(tt.a); got != tt.want {
 				t.Errorf("ToString() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsComparable(t *testing.T) {
+	for _, tt := range reflectTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := IsComparable(tt.a)
+			want := kindMaps[tt.want].IsComparable()
+			if got != want {
+				t.Errorf("IsComparable(%v) = %v, want %v", tt.want, got, want)
+			}
+		})
+	}
+}
+
+func TestIsOrdered(t *testing.T) {
+	for _, tt := range reflectTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := IsOrdered(tt.a)
+			want := kindMaps[tt.want].IsOrdered()
+			if got != want {
+				t.Errorf("IsOrdered(%v) = %v, want %v", tt.want, got, want)
+			}
+		})
+	}
+}
+
+func TestIsDeepComparable(t *testing.T) {
+	for _, tt := range reflectTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := IsDeepComparable(tt.a)
+			want := kindMaps[tt.want].IsDeepComparable()
+			if got != want {
+				t.Errorf("IsDeepComparable(%v) = %v, want %v", tt.want, got, want)
+			}
+		})
+	}
+}
+
+func TestIsIterable(t *testing.T) {
+	for _, tt := range reflectTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := IsIterable(tt.a)
+			want := kindMaps[tt.want].IsIterable()
+			if got != want {
+				t.Errorf("IsIterable(%v) = %v, want %v", tt.want, got, want)
+			}
+		})
+	}
+}
+
+func TestHasAlternate(t *testing.T) {
+	for _, tt := range reflectTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := HasAlternate(tt.a)
+			want := kindMaps[tt.want].HasAlternate()
+			if got != want {
+				t.Errorf("HasAlternate(%v) = %v, want %v", tt.want, got, want)
 			}
 		})
 	}

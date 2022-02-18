@@ -40,15 +40,45 @@ func WithLock(lk Locker, fn func()) {
 
 // IsComparable returns true if the underlying value
 // is of a type that is capable of comparisions, e.g.
-// less than, equal, greater than
+// equal, not equal
 //
-// First, numeric and string values are comparable.
+// Bools, strings and most numeric values are comparable.
 //
 // Next, types that have a Len() method are considered
-// comparable based on length.
+// comparable by this function based on their length and
+// item type alone. This is different from the standard
+// library approach.
+func IsComparable(v Any) bool { return new_any(v).IsComparable() }
+
+// IsOrdered returns true if the underlying value is ordered.
+// This means that it is capable of order based comparisons, e.g.
+// less than, greater than
 //
-// Bools, pointers, nil, channels are not comparable.
-func IsComparable(v Any) bool {
+// Strings and most numeric values are ordered.
+//
+//
+func IsOrdered(v Any) bool { return new_any(v).IsOrdered() }
+
+// IsDeepComparable returns true if the underlying value
+// is of a type that is capable of DeepEqual, the Go
+// standard library approach to rigorous comparisons.
+func IsDeepComparable(v Any) bool { return new_any(v).IsDeepComparable() }
+
+// IsIterable returns true if the underlying value is
+// made up of smaller units that can be read out one by
+// one.
+//
+// Maps, strings, and slices naturally come to mind, but this
+// package also adds functionality to iterate over most numeric
+// values and structs.
+func IsIterable(v Any) bool { return new_any(v).IsIterable() }
+
+// HasAlternate returns true if the underlying value has
+// alternate methods in addition to the Go standard library
+// operations.
+func HasAlternate(v Any) bool { return new_any(v).HasAlternate() }
+
+func isComparable1(v Any) bool {
 
 	if _, ok := ValueOf(v).Type().MethodByName("Len"); ok {
 		return true
@@ -74,11 +104,14 @@ func isComparable2(v reflect.Value) bool {
 	return false
 }
 
-func IsOrdered(v reflect.Value) bool {
+func isOrdered2(v reflect.Value) bool {
 	return v.Kind() > 1 && v.Kind() < 17
 
 }
 
+// Contains returns true if the underlying iterable
+// sequence (haystack) contains the search term
+// (needle) in at least one position.
 func Contains(needle Any, haystack []Any) bool {
 	for _, x := range haystack {
 		if reflect.DeepEqual(needle, x) {
@@ -88,6 +121,9 @@ func Contains(needle Any, haystack []Any) bool {
 	return false
 }
 
+// Count returns the number of times the search term
+// (needle) occurs in the underlying iterable
+// sequence (haystack).
 func Count(needle Any, haystack []Any) int {
 	retval := 0
 	for _, x := range haystack {
@@ -98,4 +134,13 @@ func Count(needle Any, haystack []Any) int {
 	return retval
 }
 
-func ToString(a Any) string { return fmt.Sprintf("%v", a) }
+// ToString converts the given argument to the
+// standard string representation. If a implements
+// fmt.Stringer, it is used, otherwise the slower
+// fmt.Sprintf is used as a backup.
+func ToString(a Any) string {
+	if v, ok := a.(fmt.Stringer); ok {
+		return v.String()
+	}
+	return fmt.Sprintf("%v", a)
+}

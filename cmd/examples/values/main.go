@@ -9,6 +9,8 @@ import (
 )
 
 func main() {
+
+	var intExample = 42
 	tests := []struct {
 		name string
 		a    Any
@@ -38,7 +40,7 @@ func main() {
 		{"Chan", make(chan int, 1)},
 		{"Func", IsComparable},
 		{"Map", make(map[string]interface{})},
-		{"Ptr", &ValueOf},
+		{"Ptr", &intExample},
 		{"Slice", []int{42}},
 		{"String", "42"},
 		{"Struct", ValueOf(42)},
