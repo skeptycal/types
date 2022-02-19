@@ -302,7 +302,14 @@ func Benchmark_any_IsOrdered(b *testing.B) {
 
 func Test_any(t *testing.T) {
 	t.Parallel()
-	for _, tt := range reflectTests {
+
+	rt := append(reflectTests, struct {
+		name string
+		a    Any
+		want reflect.Kind
+	}{name: "reflect.Value", a: ValueOf(42), want: reflect.Struct})
+
+	for _, tt := range rt {
 		if tt.name != "Func" {
 			a := new_any(tt.a)
 			A := NewAnyValue(tt.a)
@@ -364,28 +371,31 @@ func Test_any_TypeOf(t *testing.T) {
 func Test_any_Interface(t *testing.T) {
 	t.Parallel()
 	for _, tt := range reflectTests {
-		if tt.name != "Func" {
-			a := new_any(tt.a)
-			A := NewAnyValue(tt.a)
-			want := tt.a
-			got := a.Interface()
-			t.Run(tt.name+".Interface()", func(t *testing.T) {
-				if !reflect.DeepEqual(got, want) {
-					t.Errorf("Interface(%v) = %v, want %v", tt.a, got, want)
-				}
-			})
-			got = A.Interface()
-			t.Run(tt.name+".Interface()", func(t *testing.T) {
-				if !reflect.DeepEqual(got, want) {
-					t.Errorf("Interface(%v) = %v, want %v", tt.a, got, want)
-				}
-			})
+		if tt.name == "Func" {
+			continue
 		}
+
+		if tt.name == "Struct" {
+			continue
+		}
+
+		A := NewAnyValue(tt.a)
+
+		want := tt.a
+		got := A.Interface()
+
+		t.Run(tt.name+".Interface()", func(t *testing.T) {
+			if !reflect.DeepEqual(got, want) {
+				t.Errorf("Interface(%v) = %v(%T), want %v(%T)", tt.name, got, got, want, want)
+			}
+		})
+
 	}
 }
 
 func Test_any_Kind(t *testing.T) {
 	t.Parallel()
+
 	for _, tt := range reflectTests {
 		a := new_any(tt.a)
 		A := NewAnyValue(tt.a)
@@ -407,6 +417,7 @@ func Test_any_Kind(t *testing.T) {
 
 func Test_any_Is_all(t *testing.T) {
 	t.Parallel()
+
 	for _, tt := range reflectTests {
 		// a := new_any(tt.a)
 

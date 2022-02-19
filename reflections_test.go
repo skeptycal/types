@@ -10,6 +10,15 @@ import (
 
 var testSample int = 42
 var ptrSample = &testSample
+var ReflectTests []struct {
+	name string
+	a    Any
+	want reflect.Kind
+}
+
+func init() {
+	copy(ReflectTests, reflectTests)
+}
 
 var reflectTests = []struct {
 	name string
@@ -38,13 +47,13 @@ var reflectTests = []struct {
 	{"Array", [4]int{42, 42, 42, 42}, reflect.Array},
 	{"Chan", make(chan int, 1), reflect.Chan},
 	{"Func", IsComparable, reflect.Func},
-	// {"Interface", nil, reflect.Interface},
 	{"Map", make(map[string]interface{}), reflect.Map},
 	{"Ptr", ptrSample, reflect.Ptr},
 	{"Slice", []int{42}, reflect.Slice},
 	{"String", "42", reflect.String},
-	{"Struct", ValueOf(42), reflect.Struct},
 	{"UnsafePointer", unsafe.Pointer(nil), reflect.UnsafePointer},
+	// {"Interface", nil, reflect.Interface},
+	// {"ValueOf(42)", ValueOf(42), ValueOf(ValueOf(42)).Kind()},
 }
 
 func TestKind(t *testing.T) {

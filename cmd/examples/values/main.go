@@ -61,13 +61,6 @@ func main() {
 			s = append(s, t.Type().Method(i).Name)
 		}
 
-		// fmt.Println(s)
-
 		_ = s
-
-		// v := ValueOf(tt.a)
-		// for i := 0; i < v.NumMethod(); i++ {
-		// 	fmt.Printf("  %v\n", v.Method(i))
-		// }
 	}
 }

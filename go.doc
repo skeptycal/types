@@ -8,7 +8,13 @@ var CaseFunc = func(s string) string { ... }
 var Greek = charMap{ ... }
 var IsTerminal bool = isTerminal()
 var NoColor = color.NoColor
+func AssertDeepEqual(t *testing.T, name string, got, want Any) bool
+func AssertEqual(t *testing.T, name string, got, want Any) bool
+func AssertNotEqual(t *testing.T, name string, got, want Any) bool
+func AssertSameKind(t *testing.T, name string, got, want Any) bool
+func AssertSameType(t *testing.T, name string, got, want Any) bool
 func CPUOptions() string
+func CompareFuncs(t *testing.T, name string, got, want Any) bool
 func Contains(needle Any, haystack []Any) bool
 func Count(needle Any, haystack []Any) int
 func Frequency(s string) map[byte]int

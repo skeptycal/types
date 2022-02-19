@@ -26,17 +26,29 @@ type any struct {
 // value, type, and kind information, as well
 // as whether the type is comparable, ordered,
 // and/or iterable.
-func NewAnyValue(a Any) AnyValue { return new_any(a) }
+func NewAnyValue(a Any) AnyValue {
+	if v, ok := a.(AnyValue); ok {
+		return v
+	}
+	return new_any(a)
+}
 
 func new_any(a Any) *any {
+
+	switch v := a.(type) {
+	case reflect.Value:
+		a = v
+	case Any:
+		a = ValueOf(v).Interface()
+
+	}
+
 	return &any{
 		v:       ValueOf(a),
 		kindmap: NewKindInfo(a),
 		i:       a,
 	}
 }
-
-func (a *any) ValueOf() reflect.Value { return ValueOf(a.i) }
 
 // Kind returns the type of the underlying variable.
 // This is cached in a jit struct field upon request.
@@ -49,10 +61,6 @@ func (a *any) TypeOf() reflect.Type {
 	return a.t
 }
 
-func (a *any) KindInfo() KindInfo {
-	return a.kindmap
-}
-
 // Kind returns the kind of type of the underlying variable.
 // This is cached in a jit struct field upon request.
 func (a *any) Kind() reflect.Kind {
@@ -61,14 +69,11 @@ func (a *any) Kind() reflect.Kind {
 	}
 	return a.k
 }
-func (a *any) Interface() Any { return a.i }
-func (a *any) IsComparable() bool {
-	// return KindMaps[a.Kind()].IsComparable()
 
-	return a.KindInfo().IsComparable()
-}
-
-// func (a *any) IsOrdered() bool        { return KindMaps.IsOrdered(a.Kind()) }
+func (a *any) ValueOf() reflect.Value { return ValueOf(a.i) }
+func (a *any) KindInfo() KindInfo     { return a.kindmap }
+func (a *any) Interface() Any         { return a.i }
+func (a *any) IsComparable() bool     { return a.KindInfo().IsComparable() }
 func (a *any) IsOrdered() bool        { return a.KindInfo().IsOrdered() }
 func (a *any) IsDeepComparable() bool { return a.KindInfo().IsDeepComparable() }
 func (a *any) IsIterable() bool       { return a.KindInfo().IsIterable() }
