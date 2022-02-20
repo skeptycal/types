@@ -1,10 +1,7 @@
 package types // import "github.com/skeptycal/types"
 
 const ESC = "\x1b" ...
-const KVFormatString = "%15v = %15v" ...
 var RetVal = NewCaller(CallSetGlobalReturnValue) ...
-var Now = time.Now().UTC() ...
-var CaseFunc = func(s string) string { ... }
 var Greek = charMap{ ... }
 var IsTerminal bool = isTerminal()
 var NoColor = color.NoColor
@@ -27,9 +24,6 @@ func IsOrdered(v Any) bool
 func KindOf(a Any) reflect.Kind
 func NewColor(value ...color.Attribute) *color.Color
 func NewStruct(v Any) *structs.Struct
-func PastDay(year, month, day int) time.Time
-func RandomDate(min, max time.Time) time.Time
-func RandomString(min, max int, caseFunc func(string) string) string
 func ShowFrequency(s string) string
 func TerminalExample()
 func ToString(a Any) string
@@ -37,11 +31,7 @@ func TypeOf(a Any) reflect.Type
 func ValueOf(i interface{}) reflect.Value
 func WithLock(lk Locker, fn func())
 func NewKindInfo(a Any) kindInfo
-func GenerateRoster(n int) *roster
-func RandomStudent() *student
 type Any interface{}
-type AnyMap map[Any]Any
-type AnySlice interface{ ... }
 type AnyValue interface{ ... }
     func CallSetGlobalReturnValue(any interface{}) []AnyValue
     func NewAnyValue(a Any) AnyValue
@@ -62,8 +52,6 @@ type Conner interface{ ... }
 type Cosa struct{}
 type Cruder interface{ ... }
 type DB interface{}
-type Dict interface{ ... }
-    func NewDict(name string, protected bool) Dict
 type DictSorter interface{ ... }
 type Enabler interface{ ... }
 type Errer interface{ ... }
@@ -72,7 +60,6 @@ type Fprinter interface{ ... }
 type GetSetter interface{ ... }
 type Kind = reflect.Kind
 type KindInfo interface{ ... }
-type List interface{ ... }
 type Locker interface{ ... }
 type Printer interface{ ... }
 type Protector interface{ ... }
@@ -83,7 +70,6 @@ type Rower interface{ ... }
 type Rows = sql.Rows
 type Rowser interface{ ... }
 type Scanner interface{ ... }
-type Set interface{ ... }
 type Slicer interface{ ... }
 type Sorter interface{ ... }
 type Sprinter interface{ ... }

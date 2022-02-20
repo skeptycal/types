@@ -10,15 +10,6 @@ import (
 
 var testSample int = 42
 var ptrSample = &testSample
-var ReflectTests []struct {
-	name string
-	a    Any
-	want reflect.Kind
-}
-
-func init() {
-	copy(ReflectTests, reflectTests)
-}
 
 var reflectTests = []struct {
 	name string
