@@ -135,13 +135,6 @@ type (
 		Sprintln(args ...interface{}) string
 		Sprintf(format string, args ...interface{}) string
 	}
-
-	// DictSorter is a dictionary for types that are sortable and
-	// and implements the standard library sort.Interface methods.
-	DictSorter interface {
-		Dict
-		Sorter
-	}
 )
 
 //* Interfaces from standard library for reference.
