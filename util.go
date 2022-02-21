@@ -48,7 +48,16 @@ func WithLock(lk Locker, fn func()) {
 // comparable by this function based on their length and
 // item type alone. This is different from the standard
 // library approach.
-func IsComparable(v Any) bool { return new_any(v).IsComparable() }
+func IsComparable(a Any) bool {
+
+	v := ValueOf(a)
+	if v.Kind() == reflect.Interface {
+		v = ValueOf(Interface(v))
+	}
+	k := v.Kind()
+
+	return kindMaps[k].IsComparable()
+}
 
 // IsOrdered returns true if the underlying value is ordered.
 // This means that it is capable of order based comparisons, e.g.
@@ -77,37 +86,6 @@ func IsIterable(v Any) bool { return new_any(v).IsIterable() }
 // alternate methods in addition to the Go standard library
 // operations.
 func HasAlternate(v Any) bool { return new_any(v).HasAlternate() }
-
-func isComparable1(v Any) bool {
-
-	if _, ok := ValueOf(v).Type().MethodByName("Len"); ok {
-		return true
-	}
-
-	switch v.(type) {
-	case bool:
-		return true
-	case int, uint, float64, float32, string, []byte:
-		return true
-	default:
-		return false
-	}
-}
-
-func isComparable2(v reflect.Value) bool {
-	if IsOrdered(v) {
-		return true
-	}
-	if v.Kind() == reflect.Bool {
-		return true
-	}
-	return false
-}
-
-func isOrdered2(v reflect.Value) bool {
-	return v.Kind() > 1 && v.Kind() < 17
-
-}
 
 // Contains returns true if the underlying iterable
 // sequence (haystack) contains the search term

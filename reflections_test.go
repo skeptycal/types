@@ -1,6 +1,7 @@
 package types
 
 import (
+	"io"
 	"reflect"
 	"testing"
 	"unsafe"
@@ -43,30 +44,120 @@ var reflectTests = []struct {
 	{"Slice", []int{42}, reflect.Slice},
 	{"String", "42", reflect.String},
 	{"UnsafePointer", unsafe.Pointer(nil), reflect.UnsafePointer},
-	// {"Interface", nil, reflect.Interface},
-	// {"ValueOf(42)", ValueOf(42), ValueOf(ValueOf(42)).Kind()},
+	{"io.ReadCloser", io.NopCloser(nil), reflect.Interface},
+	{"Interface", nil, reflect.Interface},
+	{"byte slice element", []byte("fake")[0], reflect.Uint8},
 }
 
-func TestKind(t *testing.T) {
+func Test_ValueOf(t *testing.T) {
 	t.Parallel()
 	for _, tt := range reflectTests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := KindOf(tt.a); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Kind() = %v, want %v", got, tt.want)
-			}
-		})
+		tRun(t, tt.name, NewAnyValue(tt.a).ValueOf(), ValueOf(tt.a))
 	}
 }
 
-func TestTypeOf(t *testing.T) {
+func Test_KindOf(t *testing.T) {
 	t.Parallel()
 	for _, tt := range reflectTests {
-		t.Run(tt.name, func(t *testing.T) {
-			want := reflect.TypeOf(tt.a)
-			if got := TypeOf(tt.a); !reflect.DeepEqual(got, want) {
-				t.Errorf("TypeOf() = %v, want %v", got, want)
-			}
-		})
+		tRun(t, tt.name, NewAnyValue(tt.a).Kind(), KindOf(tt.a))
+	}
+}
+
+func Test_TypeOf(t *testing.T) {
+	t.Parallel()
+	for _, tt := range reflectTests {
+		tRun(t, tt.name, NewAnyValue(tt.a).TypeOf(), TypeOf(tt.a))
+	}
+}
+
+func Test_Indirect(t *testing.T) {
+	t.Parallel()
+	// LimitResult = true
+	for _, tt := range reflectTests {
+		want := ValueOf(tt.a)
+		got := NewAnyValue(tt.a).Indirect().ValueOf()
+		name := tName(tt.name, tt.name, tt.a)
+		tRun(t, name, got, want)
+	}
+	// LimitResult = false
+}
+
+func Test_Addr(t *testing.T) {
+	t.Parallel()
+	for _, tt := range reflectTests {
+		want := ValueOf(tt.a)
+		got := Addr(want)
+
+		if !want.CanAddr() {
+			continue
+		}
+
+		name := tName(tt.name, tt.name, tt.a)
+		tRun(t, name, got, want.Addr())
+	}
+}
+
+func Test_Interface(t *testing.T) {
+	t.Parallel()
+	for _, tt := range reflectTests {
+		v := ValueOf(tt.a)
+
+		got := Interface(v)
+
+		if !v.IsValid() {
+			continue
+		}
+
+		if v.IsZero() {
+			continue
+		}
+
+		if !v.CanInterface() {
+			continue
+		}
+
+		name := tName(tt.name, tt.name, tt.a)
+		tRun(t, name, got, v.Interface())
+	}
+}
+
+func Test_Elem(t *testing.T) {
+	t.Parallel()
+	for _, tt := range reflectTests {
+		want := ValueOf(tt.a)
+		got := Elem(want)
+
+		if want.Kind() != reflect.Ptr || want.Kind() != reflect.Interface {
+			continue
+		}
+		name := tName(tt.name, tt.name, tt.a)
+		tRun(t, name, got, want.Elem())
+	}
+}
+
+func Test_Convert(t *testing.T) {
+	t.Parallel()
+
+	wantType := ValueOf(int(42)).Type()
+
+	for _, tt := range reflectTests {
+		v := ValueOf(tt.a)
+		_ = Interface(Convert(v, wantType))
+
+		if !v.IsValid() {
+			continue
+		}
+
+		want := tt.a
+		got := tt.a
+
+		if v.CanConvert(wantType) {
+			got = Convert(v, wantType).Interface()
+			want = v.Convert(wantType).Interface()
+		}
+
+		name := tName(tt.name, tt.name, tt.a)
+		tRun(t, name, got, want)
 	}
 }
 
@@ -87,4 +178,11 @@ func TestNewStruct(t *testing.T) {
 			}
 		})
 	}
+}
+
+func guardReflectType(v reflect.Value) reflect.Type {
+	if v.Kind() == reflect.Invalid {
+		return reflect.Type(nil)
+	}
+	return v.Type()
 }

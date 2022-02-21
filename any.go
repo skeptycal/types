@@ -1,10 +1,13 @@
 package types
 
-import "reflect"
+import (
+	"fmt"
+	"reflect"
+)
 
 // Any represents a object that may contain any
 // valid type.
-type Any interface{}
+type Any = interface{}
 
 type any struct {
 	v       reflect.Value
@@ -38,7 +41,9 @@ func new_any(a Any) *any {
 	switch v := a.(type) {
 	case reflect.Value:
 		a = v
-	case Any:
+	case nil:
+		break
+	default:
 		a = ValueOf(v).Interface()
 
 	}
@@ -65,9 +70,36 @@ func (a *any) TypeOf() reflect.Type {
 // This is cached in a jit struct field upon request.
 func (a *any) Kind() reflect.Kind {
 	if a.k == 0 {
-		a.k = a.ValueOf().Kind()
+		a.k = reflect.ValueOf(a.i).Kind()
 	}
 	return a.k
+}
+
+// Indirect returns the value that a pointer
+// points to. If the underlying object is a nil
+// pointer, Indirect returns a zero Value.
+// If the underlying is not a pointer, Indirect
+// returns the orignal AnyValue.
+func (a *any) Indirect() AnyValue {
+	if a.Kind() == reflect.Ptr {
+		return NewAnyValue(a)
+	}
+	return a
+}
+
+// Elem returns the value that the interface
+// contains or that the pointer points to.
+// If the kind of the AnyValue is not Interface
+// or Ptr, the original AnyValue is returned.
+// It returns the zero Value if the underlying is nil.
+func (a *any) Elem() reflect.Value {
+	return Elem(a.ValueOf())
+	// v := a.ValueOf()
+
+	// if v.Kind() == reflect.Ptr || v.Kind() == reflect.Interface {
+	// 	return v.Elem()
+	// }
+	// return v
 }
 
 func (a *any) ValueOf() reflect.Value { return ValueOf(a.i) }
@@ -78,6 +110,7 @@ func (a *any) IsOrdered() bool        { return a.KindInfo().IsOrdered() }
 func (a *any) IsDeepComparable() bool { return a.KindInfo().IsDeepComparable() }
 func (a *any) IsIterable() bool       { return a.KindInfo().IsIterable() }
 func (a *any) HasAlternate() bool     { return a.KindInfo().HasAlternate() }
+func (a *any) String() string         { return fmt.Sprintf("%v", a.i) }
 
 // AnyValue is a wrapper around the Any interface,
 // or interface{}, which may contain any value.
@@ -101,6 +134,19 @@ type AnyValue interface {
 
 	// Interface returns the original underlying interface.
 	Interface() Any
+
+	// Indirect returns the value pointed to by a pointer.
+	// If the AnyValue is not a pointer, indirect returns the
+	// AnyValue unchanged.
+	Indirect() AnyValue
+
+	// Elem returns the value that the interface contains
+	// or that the pointer points to. If the kind of the
+	// AnyValue is not Interface or Ptr, the original
+	// AnyValue is returned.
+	Elem() reflect.Value
+
+	String() string
 
 	KindInfo
 }

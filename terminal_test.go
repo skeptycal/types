@@ -11,11 +11,6 @@ func TestTerminal(t *testing.T) {
 	}
 }
 
-func TestTerminalExample(t *testing.T) {
-	t.Parallel()
-	TerminalExample()
-}
-
 // Example prints the results of isatty.IsTerminal()
 // and isatty.IsCygwinTerminal() to os.Stdout
 func ExampleTerminalExample() {

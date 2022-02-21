@@ -205,6 +205,7 @@ func (k kindInfo) HasAlternate() bool     { return k.alternate }
 // - Array values are deeply equal when their corresponding
 // elements are deeply equal.
 var kindMaps = kindMap{
+	// comparable, ordered, deeplyComparable, alternate, iterable
 	reflect.Invalid:       {false, false, false, true, false}, // 0
 	reflect.Bool:          {true, false, true, false, false},  // 1
 	reflect.Complex64:     {true, false, true, false, false},  // 15
