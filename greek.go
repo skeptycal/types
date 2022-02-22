@@ -1,37 +1,154 @@
 package types
 
-type charMap map[string]struct {
-	upper rune
-	lower rune
+import (
+	"math"
+	"math/rand"
+	"strings"
+	"time"
+)
+
+// ReplacementChar is the recognized unicode replacement
+// character for malformed unicode or errors in
+// encoding.
+//
+// It is also found in unicode.ReplacementChar
+const ReplacementChar rune = '\uFFFD'
+
+const (
+	UPPER    = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	LOWER    = "abcdefghijklmnopqrstuvwxyz"
+	DIGITS   = "0123456789"
+	ALPHA    = LOWER + UPPER
+	ALPHANUM = ALPHA + DIGITS
+)
+
+func init() {
+	rand.Seed(int64(time.Now().Nanosecond()))
 }
 
-func (c charMap) ToLower(s string) rune { return c[s].lower }
-func (c charMap) ToUpper(s string) rune { return c[s].upper }
+func RandomString(n int) string {
+	sb := strings.Builder{}
+	defer sb.Reset()
+
+	for i := 0; i < n; i++ {
+		pos := rand.Intn(len(ALPHANUM) - 1)
+		sb.WriteByte(ALPHANUM[pos])
+	}
+
+	return sb.String()
+}
+
+func RandomGreekString(n int) string {
+	sb := strings.Builder{}
+	defer sb.Reset()
+
+	keys := Greek.Keys()
+	listLen := len(keys) - 1
+
+	for i := 0; i < n; i++ {
+		pos := rand.Intn(listLen)
+		if rand.Intn(100) < 50 {
+			sb.WriteRune(Greek[keys[pos]].lower)
+		} else {
+			sb.WriteRune(Greek[keys[pos]].upper)
+
+		}
+	}
+
+	return sb.String()
+}
+
+func RandomGreek(length, minGreekPct, maxGreekPct int) string {
+	rng := maxGreekPct - minGreekPct
+	pct := rand.Intn(rng) + minGreekPct
+	numGreek := int(math.Floor(float64(pct) / 100 * float64(length)))
+	// get regular text
+
+	s := RandomString(length - numGreek)
+
+	// get Greek text
+	s += RandomGreekString(numGreek)
+
+	b := []rune(s)
+
+	rand.Shuffle(len(b), func(i, j int) { b[i], b[j] = b[j], b[i] })
+	return string(b)
+}
+
+type charMap map[string]struct {
+	English rune
+	upper   rune
+	lower   rune
+}
+
+func (c charMap) toLower(s string) rune {
+	if v, ok := c[s]; ok {
+		return v.lower
+	}
+	return ReplacementChar
+}
+func (c charMap) toUpper(s string) rune {
+	if v, ok := c[s]; ok {
+		return v.upper
+	}
+	return ReplacementChar
+}
+
+func (c charMap) ToLower(s string) string {
+
+	/// TODO: this will be a slow algorithm ...
+	for _, v := range Greek {
+		if strings.Contains(s, string(v.upper)) {
+			s = strings.ReplaceAll(s, string(v.upper), string(v.lower))
+		}
+	}
+	return s
+}
+func (c charMap) ToUpper(s string) string {
+
+	/// TODO: this will be a slow algorithm ...
+	for _, v := range Greek {
+		if strings.Contains(s, string(v.lower)) {
+			s = strings.ReplaceAll(s, string(v.lower), string(v.upper))
+		}
+	}
+	return s
+}
+
+func (c charMap) Len() int { return len(c) }
+
+func (c charMap) Keys() []string {
+	keys := make([]string, 0, c.Len())
+	for k := range c {
+		keys = append(keys, k)
+	}
+	return keys
+}
 
 var Greek = charMap{
 	// Name, Uppercase, Lowercase
-	"Alpha":   {'Α', 'α'},
-	"Beta":    {'Β', 'β'},
-	"Gamma":   {'Γ', 'γ'},
-	"Delta":   {'Δ', 'δ'},
-	"Epsilon": {'Ε', 'ε'},
-	"Zeta":    {'Ζ', 'ζ'},
-	"Eta":     {'Η', 'η'},
-	"Theta":   {'Θ', 'θ'},
-	"Iota":    {'Ι', 'ι'},
-	"Kappa":   {'Κ', 'κ'},
-	"Lambda":  {'Λ', 'λ'},
-	"Mu":      {'Μ', 'μ'},
-	"Nu":      {'Ν', 'ν'},
-	"Xi":      {'Ξ', 'ξ'},
-	"Omicron": {'Ο', 'ο'},
-	"Pi":      {'Π', 'π'},
-	"Rho":     {'Ρ', 'ρ'},
-	"Sigma":   {'Σ', 'σ'},
-	"Tau":     {'Τ', 'τ'},
-	"Upsilon": {'Υ', 'υ'},
-	"Phi":     {'Φ', 'φ'},
-	"Chi":     {'Χ', 'χ'},
-	"Psi":     {'Ψ', 'ψ'},
-	"Omega":   {'Ω', 'ω'},
+	"Alpha":   {'A', 'Α', 'α'},
+	"Beta":    {'B', 'Β', 'β'},
+	"Gamma":   {'G', 'Γ', 'γ'},
+	"Delta":   {'D', 'Δ', 'δ'},
+	"Epsilon": {'E', 'Ε', 'ε'},
+	"Zeta":    {'Z', 'Ζ', 'ζ'},
+	"Eta":     {'H', 'Η', 'η'},
+	"Theta":   {'T', 'Θ', 'θ'},
+	"Iota":    {'I', 'Ι', 'ι'},
+	"Kappa":   {'K', 'Κ', 'κ'},
+	"Lambda":  {'L', 'Λ', 'λ'},
+	"Mu":      {'M', 'Μ', 'μ'},
+	"Nu":      {'N', 'Ν', 'ν'},
+	"Xi":      {'X', 'Ξ', 'ξ'},
+	"Omicron": {'O', 'Ο', 'ο'},
+	"Pi":      {'P', 'Π', 'π'},
+	"Rho":     {'R', 'Ρ', 'ρ'},
+	"Sigma":   {'S', 'Σ', 'σ'},
+	"Tau":     {'t', 'Τ', 'τ'},
+	"Upsilon": {'U', 'Υ', 'υ'},
+	"Phi":     {'p', 'Φ', 'φ'},
+	"Chi":     {'C', 'Χ', 'χ'},
+	"Psi":     {'s', 'Ψ', 'ψ'},
+	"Omega":   {'W', 'Ω', 'ω'},
 }

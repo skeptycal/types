@@ -8,6 +8,24 @@ import (
 	"golang.org/x/sys/cpu"
 )
 
+func CPUOptionsAvailable() string {
+	sb := strings.Builder{}
+	defer sb.Reset()
+
+	for _, v := range cpuOptionMap {
+		s := structs.New(v)
+		for kk, vv := range s.Map() {
+			if b, ok := vv.(bool); ok {
+				if b {
+					sb.WriteString(fmt.Sprintf("%v: %v\n", kk, vv))
+				}
+			}
+		}
+	}
+
+	return sb.String()
+}
+
 func CPUOptions() string {
 	sb := strings.Builder{}
 	defer sb.Reset()

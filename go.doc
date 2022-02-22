@@ -1,49 +1,44 @@
 package types // import "github.com/skeptycal/types"
 
 const ESC = "\x1b" ...
-var RetVal = NewCaller(CallSetGlobalReturnValue) ...
+const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ...
+const ReplacementChar rune = '\uFFFD'
 var Greek = charMap{ ... }
 var IsTerminal bool = isTerminal()
 var NoColor = color.NoColor
-func AssertDeepEqual(t *testing.T, name string, got, want Any) bool
-func AssertEqual(t *testing.T, name string, got, want Any) bool
-func AssertNotEqual(t *testing.T, name string, got, want Any) bool
-func AssertSameKind(t *testing.T, name string, got, want Any) bool
-func AssertSameType(t *testing.T, name string, got, want Any) bool
+func Addr(v reflect.Value) reflect.Value
 func CPUOptions() string
-func CompareFuncs(t *testing.T, name string, got, want Any) bool
+func CPUOptionsAvailable() string
 func Contains(needle Any, haystack []Any) bool
+func Convert(v reflect.Value, typ reflect.Type) reflect.Value
 func Count(needle Any, haystack []Any) int
-func Frequency(s string) map[byte]int
+func Elem(v reflect.Value) reflect.Value
 func HasAVX2() bool
 func HasAlternate(v Any) bool
-func IsComparable(v Any) bool
+func Indirect(v reflect.Value) reflect.Value
+func IsComparable(a Any) bool
 func IsDeepComparable(v Any) bool
 func IsIterable(v Any) bool
 func IsOrdered(v Any) bool
 func KindOf(a Any) reflect.Kind
 func NewColor(value ...color.Attribute) *color.Color
 func NewStruct(v Any) *structs.Struct
+func RandomGreek(length, minGreekPct, maxGreekPct int) string
+func RandomGreekString(n int) string
+func RandomString(n int) string
 func ShowFrequency(s string) string
 func TerminalExample()
 func ToString(a Any) string
 func TypeOf(a Any) reflect.Type
 func ValueOf(i interface{}) reflect.Value
 func WithLock(lk Locker, fn func())
+func Frequency(s string) byteMap
+func NewByteMap(s string) *byteMap
 func NewKindInfo(a Any) kindInfo
-type Any interface{}
+type Any = interface{}
+    func Interface(v reflect.Value) Any
 type AnyValue interface{ ... }
-    func CallSetGlobalReturnValue(any interface{}) []AnyValue
     func NewAnyValue(a Any) AnyValue
-type Args []Any
-type Benchmark interface{ ... }
-    func NewBenchmark(name string, fn Any, args []Any) Benchmark
-type BenchmarkSet interface{ ... }
-    func NewBenchmarkSet(b *testing.B, name string, set []Benchmark) BenchmarkSet
-type BmFunc = func(b *testing.B) []reflect.Value
-    func BenchmarkFunc(fn ReFunc, args []reflect.Value) BmFunc
-type Caller interface{ ... }
-    func NewCaller(fn callerFunc) Caller
 type Closer interface{ ... }
 type ColumnType = sql.ColumnType
 type ColumnTyper interface{ ... }
@@ -52,7 +47,6 @@ type Conner interface{ ... }
 type Cosa struct{}
 type Cruder interface{ ... }
 type DB interface{}
-type DictSorter interface{ ... }
 type Enabler interface{ ... }
 type Errer interface{ ... }
 type Formatter interface{ ... }
@@ -63,7 +57,6 @@ type KindInfo interface{ ... }
 type Locker interface{ ... }
 type Printer interface{ ... }
 type Protector interface{ ... }
-type ReFunc = func(in []reflect.Value) []reflect.Value
 type Result interface{ ... }
 type Row = sql.Row
 type Rower interface{ ... }
@@ -77,11 +70,6 @@ type State interface{ ... }
 type Stmter interface{ ... }
 type StringWriter interface{ ... }
 type Stringer interface{ ... }
-type Test interface{ ... }
-    func NewTest(name string, fn func(t *testing.T)) Test
-type TestOptioner interface{ ... }
-type TestSet interface{ ... }
-    func NewTestSet(name string, set []Test) TestSet
 type TxOptions = sql.TxOptions
 type Txer interface{ ... }
 type Type = reflect.Type

@@ -5,6 +5,11 @@ import (
 	"strings"
 )
 
+func NewByteMap(s string) *byteMap {
+	b := Frequency(s)
+	return &b
+}
+
 type byteMap map[byte]int
 
 func (b byteMap) Len() int { return len(b) }
@@ -12,7 +17,7 @@ func (b byteMap) Len() int { return len(b) }
 // func (b byteMap) Less(i, j int) bool { return b[i] < b[j] }
 
 // LetterFrequency maps the frequency of letters in a text sample
-func Frequency(s string) map[byte]int {
+func Frequency(s string) byteMap {
 	m := make(map[byte]int, 255)
 
 	b := []byte(s)

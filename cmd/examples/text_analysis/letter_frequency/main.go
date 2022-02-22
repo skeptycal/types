@@ -39,7 +39,7 @@ func main() {
 
 	s := GetSampleText()
 
-	var m ByteMap = types.Frequency(s)
+	var m ByteMap = ByteMap(types.Frequency(s))
 
 	list := make([]byte, 0, len(m))
 
