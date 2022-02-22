@@ -2,6 +2,8 @@ package types
 
 import (
 	"testing"
+
+	"github.com/skeptycal/benchmark"
 )
 
 func Test_byteMap_Len(t *testing.T) {
@@ -20,7 +22,7 @@ func Test_byteMap_Len(t *testing.T) {
 	}
 }
 
-var textTests = []test{
+var textTests = []benchmark.Tester{
 	{"abcde", "abcde", len(Frequency("abcde")), 5, false},
 	{"0123456789", "0123456789", len(Frequency("0123456789")), 10, false},
 	{"AAAAA", "AAAAA", len(Frequency("AAAAA")), 1, false},
@@ -29,5 +31,5 @@ var textTests = []test{
 }
 
 func TestFrequency(t *testing.T) {
-	NewTestSet(t, "TestFrequency", textTests).Run()
+	benchmark.NewTestSet(t, "TestFrequency", textTests).Run()
 }

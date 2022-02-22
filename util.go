@@ -2,10 +2,28 @@ package types
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"reflect"
+	"strings"
+	"time"
 
 	"github.com/mattn/go-isatty"
+)
+
+// ReplacementChar is the recognized unicode replacement
+// character for malformed unicode or errors in
+// encoding.
+//
+// It is also found in unicode.ReplacementChar
+const ReplacementChar rune = '\uFFFD'
+
+const (
+	UPPER    = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	LOWER    = "abcdefghijklmnopqrstuvwxyz"
+	DIGITS   = "0123456789"
+	ALPHA    = LOWER + UPPER
+	ALPHANUM = ALPHA + DIGITS
 )
 
 var (
@@ -22,6 +40,22 @@ var (
 		(!isatty.IsTerminal(os.Stdout.Fd()) && !isatty.IsCygwinTerminal(os.Stdout.Fd()))
 	// NoColor = color.NoColor
 )
+
+func init() {
+	rand.Seed(int64(time.Now().Nanosecond()))
+}
+
+func RandomString(n int) string {
+	sb := strings.Builder{}
+	defer sb.Reset()
+
+	for i := 0; i < n; i++ {
+		pos := rand.Intn(len(ALPHANUM) - 1)
+		sb.WriteByte(ALPHANUM[pos])
+	}
+
+	return sb.String()
+}
 
 // noColorEnvExists returns true if the environment variable NO_COLOR exists.
 //

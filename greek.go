@@ -7,35 +7,8 @@ import (
 	"time"
 )
 
-// ReplacementChar is the recognized unicode replacement
-// character for malformed unicode or errors in
-// encoding.
-//
-// It is also found in unicode.ReplacementChar
-const ReplacementChar rune = '\uFFFD'
-
-const (
-	UPPER    = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	LOWER    = "abcdefghijklmnopqrstuvwxyz"
-	DIGITS   = "0123456789"
-	ALPHA    = LOWER + UPPER
-	ALPHANUM = ALPHA + DIGITS
-)
-
 func init() {
 	rand.Seed(int64(time.Now().Nanosecond()))
-}
-
-func RandomString(n int) string {
-	sb := strings.Builder{}
-	defer sb.Reset()
-
-	for i := 0; i < n; i++ {
-		pos := rand.Intn(len(ALPHANUM) - 1)
-		sb.WriteByte(ALPHANUM[pos])
-	}
-
-	return sb.String()
 }
 
 func RandomGreekString(n int) string {

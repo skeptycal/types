@@ -3,6 +3,14 @@ package types
 import (
 	"math/rand"
 	"testing"
+
+	"github.com/skeptycal/benchmark"
+)
+
+var (
+	tRun     = benchmark.TRun
+	tName    = benchmark.TName
+	tTypeRun = benchmark.TTypeRun
 )
 
 func Test_RandomGreekString(t *testing.T) {
