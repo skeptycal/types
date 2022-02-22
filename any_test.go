@@ -6,7 +6,10 @@ import (
 	"testing"
 )
 
-var globalReturn bool
+var (
+	LimitResult  = benchmark.LimitResult
+	globalReturn bool
+)
 
 /* IsComparable benchmarks
 

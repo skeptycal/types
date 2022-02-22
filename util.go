@@ -31,6 +31,10 @@ func noColorEnvExists() bool {
 	return exists
 }
 
+func chr(c byte) string {
+	return fmt.Sprintf("%c", c)
+}
+
 // WithLock runs fn while holding lk.
 func WithLock(lk Locker, fn func()) {
 	defer lk.Unlock() // in case fn panics
