@@ -1,23 +1,24 @@
-package types
+package types_test
 
 import (
 	"reflect"
 	"testing"
 
-	"github.com/fatih/color"
+	. "github.com/skeptycal/types"
 )
 
 func TestNewColor(t *testing.T) {
 	type args struct {
-		value []color.Attribute
+		value []Attribute
 	}
 	tests := []struct {
 		name string
 		args args
-		want *color.Color
+		want *Color
 	}{
-		{"reset", args{value: []color.Attribute{color.Reset}}, color.New(color.Reset)},
+		{"reset", args{value: []Attribute{Reset}}, NewColor(Reset)},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := NewColor(tt.args.value...); !reflect.DeepEqual(got, tt.want) {

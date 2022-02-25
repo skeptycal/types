@@ -1,6 +1,10 @@
-package types
+package types_test
 
-import "testing"
+import (
+	"testing"
+
+	. "github.com/skeptycal/types"
+)
 
 func TestConst(t *testing.T) {
 	t.Parallel()

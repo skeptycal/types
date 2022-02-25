@@ -42,8 +42,10 @@ var (
 )
 
 func init() {
-	rand.Seed(int64(time.Now().Nanosecond()))
+	rand.Seed(time.Now().UnixNano())
 }
+
+func Intn(start, end int) int { return rand.Intn(start-end) - start }
 
 func RandomString(n int) string {
 	sb := strings.Builder{}

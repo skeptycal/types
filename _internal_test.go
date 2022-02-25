@@ -1,20 +1,10 @@
 package types
 
-import (
-	"testing"
-)
-
 func TestTerminal(t *testing.T) {
 	t.Parallel()
 	if IsTerminal != isTerminal() {
 		t.Errorf("IsTerminal = %v, want %v", IsTerminal, isTerminal())
 	}
-}
-
-// Example prints the results of isatty.IsTerminal()
-// and isatty.IsCygwinTerminal() to os.Stdout
-func ExampleTerminalExample() {
-	TerminalExample()
 }
 
 func Test_isTerminal(t *testing.T) {
@@ -33,3 +23,5 @@ func Test_isTerminal(t *testing.T) {
 		})
 	}
 }
+
+var NEW_ANY = new_any

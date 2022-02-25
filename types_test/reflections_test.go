@@ -1,4 +1,4 @@
-package types
+package types_test
 
 import (
 	"io"
@@ -7,6 +7,7 @@ import (
 	"unsafe"
 
 	"github.com/fatih/structs"
+	. "github.com/skeptycal/types"
 )
 
 var testSample int = 42

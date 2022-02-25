@@ -3,9 +3,9 @@ package types // import "github.com/skeptycal/types"
 const ESC = "\x1b" ...
 const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ...
 const ReplacementChar rune = '\uFFFD'
+var NoColor = color.NoColor ...
 var Greek = charMap{ ... }
 var IsTerminal bool = isTerminal()
-var NoColor = color.NoColor
 func Addr(v reflect.Value) reflect.Value
 func CPUOptions() string
 func CPUOptionsAvailable() string
@@ -16,6 +16,7 @@ func Elem(v reflect.Value) reflect.Value
 func HasAVX2() bool
 func HasAlternate(v Any) bool
 func Indirect(v reflect.Value) reflect.Value
+func Intn(start, end int) int
 func IsComparable(a Any) bool
 func IsDeepComparable(v Any) bool
 func IsIterable(v Any) bool
@@ -39,7 +40,9 @@ type Any = interface{}
     func Interface(v reflect.Value) Any
 type AnyValue interface{ ... }
     func NewAnyValue(a Any) AnyValue
+type Attribute = color.Attribute
 type Closer interface{ ... }
+type Color = color.Color
 type ColumnType = sql.ColumnType
 type ColumnTyper interface{ ... }
 type Connecter interface{ ... }

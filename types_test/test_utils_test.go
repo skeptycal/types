@@ -1,4 +1,4 @@
-package types
+package types_test
 
 // func Test_limitTestResultLength(t *testing.T) {
 // 	type args struct {

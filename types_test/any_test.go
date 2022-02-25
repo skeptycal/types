@@ -1,16 +1,18 @@
-package types
+package types_test
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
 
-	"github.com/skeptycal/benchmark"
+	. "github.com/skeptycal/types"
 )
 
 var (
-	LimitResult  = benchmark.LimitResult
+	// LimitResult  = benchmark.LimitResult
 	globalReturn bool
+
+	new_any = NEW_ANY
 )
 
 /* IsComparable benchmarks
@@ -73,7 +75,6 @@ Struct.IsComparable()-8          	36057285	        33.31 ns/op	       0 B/op	   
 IsComparable(Struct)-8           	19908489	        60.32 ns/op	       0 B/op	       0 allocs/op
 UnsafePointer.IsComparable()-8   	36012063	        33.31 ns/op	       0 B/op	       0 allocs/op
 IsComparable(UnsafePointer)-8    	19909204	        60.31 ns/op	       0 B/op	       0 allocs/op
-
 
 /// Raw Struct method is faster than global function which is faster than the interface method
 struct_method-8         	66181033	        18.17 ns/op	       0 B/op	       0 allocs/op
