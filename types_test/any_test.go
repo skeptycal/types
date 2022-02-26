@@ -12,7 +12,7 @@ var (
 	// LimitResult  = benchmark.LimitResult
 	globalReturn bool
 
-	new_any = NEW_ANY
+	new_any = _NEW_ANY
 )
 
 /* IsComparable benchmarks

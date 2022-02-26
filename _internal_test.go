@@ -23,5 +23,3 @@ func Test_isTerminal(t *testing.T) {
 		})
 	}
 }
-
-var NEW_ANY = new_any

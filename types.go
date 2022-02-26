@@ -6,7 +6,10 @@ import (
 	"github.com/skeptycal/errorlogger"
 )
 
-var log = errorlogger.Log
+var (
+	log      = errorlogger.Log
+	_NEW_ANY = new_any
+)
 
 type (
 
