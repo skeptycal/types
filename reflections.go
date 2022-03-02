@@ -47,18 +47,9 @@ func Addr(v reflect.Value) reflect.Value {
 // It panics if the Value was obtained by accessing
 // unexported struct fields.
 func Interface(v reflect.Value) Any {
-	// a := NewAnyValue(v)
-	// if a.Kind() == reflect.Invalid {
-	// 	return v
-	// }
-
 	if !v.IsValid() {
 		return v
 	}
-
-	// if v.IsZero() {
-	// 	return v.Interface()
-	// }
 
 	if v.CanInterface() {
 		return v.Interface()
@@ -72,10 +63,9 @@ func Interface(v reflect.Value) Any {
 // the v is returned.
 // It returns the zero Value if the underlying is nil.
 func Elem(v reflect.Value) reflect.Value {
-
 	switch v.Kind() {
 	case reflect.Interface:
-		return v.Elem()
+		return Elem(ValueOf(Interface(v)))
 	case reflect.Ptr:
 		return Indirect(v)
 	case reflect.Invalid:
@@ -105,4 +95,12 @@ func NewStruct(v Any) *structs.Struct {
 		return structs.New(v)
 	}
 	return NilStruct
+}
+
+func GuardReflectType(v reflect.Value) reflect.Type {
+	if v.Kind() == reflect.Invalid {
+		return nil
+	}
+
+	return v.Type()
 }

@@ -27,6 +27,7 @@ func GetFileListByPrefix(path, prefix string) (files []string, err error)
 func GetFileListBySuffix(path, suffix string) (files []string, err error)
 func GetFileListWithDirectories(path string) (files []string, err error)
 func GetGoFileList() (files []string, err error)
+func GuardReflectType(v reflect.Value) reflect.Type
 func HasAVX2() bool
 func HasAlternate(v Any) bool
 func Indirect(v reflect.Value) reflect.Value
@@ -49,6 +50,7 @@ func TAssertEqual(t *testing.T, name string, got, want Any)
 func TAssertType(t *testing.T, name string, got, want reflect.Kind)
 func TError(t *testing.T, name string, got, want Any)
 func TName(testname, funcname, argname Any) string
+func TRec(t *testing.T)
 func TRun(t *testing.T, name string, got, want Any)
 func TTypeError(t *testing.T, name string, got, want Any)
 func TTypeRun(t *testing.T, name string, got, want Any)

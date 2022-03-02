@@ -19,6 +19,12 @@ func Rec() {
 	}
 }
 
+func TRec(t *testing.T) {
+	if r := recover(); r != nil {
+		t.Errorf("panic recovered from: %v", r)
+	}
+}
+
 func TAssertType(t *testing.T, name string, got, want reflect.Kind) {
 	t.Helper()
 
@@ -30,7 +36,10 @@ func TAssertType(t *testing.T, name string, got, want reflect.Kind) {
 }
 
 func TRun(t *testing.T, name string, got, want Any) {
-	defer Rec()
+	if r := recover(); r != nil {
+		log.Errorf("panic recovered from ", r)
+	}
+	// defer Rec()
 	t.Helper()
 	TAssertEqual(t, name, got, want)
 }

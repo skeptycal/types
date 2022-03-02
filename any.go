@@ -88,7 +88,7 @@ func (a *any) Indirect() AnyValue {
 }
 
 // Elem returns the value that the interface
-// contains or that the pointer points to.
+// contains or that the pointer poin111111111111111111111111111111111111111111111111111111111111111111111w                                                                                                                                                                        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwts to.
 // If the kind of the AnyValue is not Interface
 // or Ptr, the original AnyValue is returned.
 // It returns the zero Value if the underlying is nil.
@@ -104,7 +104,21 @@ func (a *any) Elem() reflect.Value {
 
 func (a *any) ValueOf() reflect.Value { return ValueOf(a.i) }
 func (a *any) KindInfo() KindInfo     { return a.kindmap }
-func (a *any) Interface() Any         { return a.i }
+func (a *any) Interface() Any {
+	if a.i == nil {
+		v := a.ValueOf()
+		if !v.IsValid() {
+			return nil
+		}
+
+		if a.ValueOf().CanInterface() {
+			a.i = Interface(v)
+		}
+
+		a.i = Interface(Elem(v))
+	}
+	return a.i
+}
 func (a *any) IsComparable() bool     { return a.KindInfo().IsComparable() }
 func (a *any) IsOrdered() bool        { return a.KindInfo().IsOrdered() }
 func (a *any) IsDeepComparable() bool { return a.KindInfo().IsDeepComparable() }
