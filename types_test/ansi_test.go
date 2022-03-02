@@ -16,7 +16,9 @@ func TestNewColor(t *testing.T) {
 		args args
 		want *Color
 	}{
-		{"reset", args{value: []Attribute{Reset}}, NewColor(Reset)},
+		{"reset", args{value: []Attribute{ResetCode}}, NewColor(ResetCode)},
+		{"redbold", args{value: []Attribute{FgRed, Bold}}, NewColor(FgRed, Bold)},
+		{"blueitalic", args{value: []Attribute{FgBlue, Italic}}, NewColor(FgBlue).Add(Italic)},
 	}
 
 	for _, tt := range tests {
