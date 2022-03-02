@@ -3,26 +3,34 @@ package types // import "github.com/skeptycal/types"
 const ESC = "\x1b" ...
 const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ...
 const ReplacementChar rune = '\uFFFD'
-var NoColor = color.NoColor ...
+var Reset = NewColor(ResetCode) ...
 var LimitResult bool ...
 var Greek = charMap{ ... }
 var IsTerminal bool = isTerminal()
 var NilStruct = &structs.Struct{}
+var NoColor = color.NoColor
 func Addr(v reflect.Value) reflect.Value
 func AssertComparable(t *testing.T, got, want Any) (retval bool)
 func AssertEqual(got, want Any) bool
+func Attn(format string, args ...interface{})
 func BRun(b *testing.B, name string, function Any, args ...Any)
 func BTest(b *testing.B, text string, got, want Any) bool
+func Blue(format string, args ...interface{}) (n int, err error)
 func CPUOptions() string
 func CPUOptionsAvailable() string
 func Contains(needle Any, haystack []Any) bool
 func Convert(v reflect.Value, typ reflect.Type) reflect.Value
 func Count(needle Any, haystack []Any) int
 func Elem(v reflect.Value) reflect.Value
-func GetFileList(pattern string) (list []os.FileInfo, err error)
+func GetFileListByName(path, needle string) (files []string, err error)
+func GetFileListByPrefix(path, prefix string) (files []string, err error)
+func GetFileListBySuffix(path, suffix string) (files []string, err error)
+func GetFileListWithDirectories(path string) (files []string, err error)
+func GetGoFileList() (files []string, err error)
 func HasAVX2() bool
 func HasAlternate(v Any) bool
 func Indirect(v reflect.Value) reflect.Value
+func Info(format string, args ...interface{})
 func Intn(start, end int) int
 func IsComparable(a Any) bool
 func IsDeepComparable(v Any) bool
@@ -61,6 +69,11 @@ type AnyValue interface{ ... }
 type Arg interface{}
 type Assert interface{ ... }
 type Attribute = color.Attribute
+    const ResetCode Attribute = iota ...
+    const FgBlack Attribute = iota + 30 ...
+    const FgHiBlack Attribute = iota + 90 ...
+    const BgBlack Attribute = iota + 40 ...
+    const BgHiBlack Attribute = iota + 100 ...
 type Closer interface{ ... }
 type Color = color.Color
 type ColumnType = sql.ColumnType
