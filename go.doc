@@ -4,15 +4,22 @@ const ESC = "\x1b" ...
 const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ...
 const ReplacementChar rune = '\uFFFD'
 var NoColor = color.NoColor ...
+var LimitResult bool ...
 var Greek = charMap{ ... }
 var IsTerminal bool = isTerminal()
+var NilStruct = &structs.Struct{}
 func Addr(v reflect.Value) reflect.Value
+func AssertComparable(t *testing.T, got, want Any) (retval bool)
+func AssertEqual(got, want Any) bool
+func BRun(b *testing.B, name string, function Any, args ...Any)
+func BTest(b *testing.B, text string, got, want Any) bool
 func CPUOptions() string
 func CPUOptionsAvailable() string
 func Contains(needle Any, haystack []Any) bool
 func Convert(v reflect.Value, typ reflect.Type) reflect.Value
 func Count(needle Any, haystack []Any) int
 func Elem(v reflect.Value) reflect.Value
+func GetFileList(pattern string) (list []os.FileInfo, err error)
 func HasAVX2() bool
 func HasAlternate(v Any) bool
 func Indirect(v reflect.Value) reflect.Value
@@ -24,12 +31,22 @@ func IsOrdered(v Any) bool
 func KindOf(a Any) reflect.Kind
 func NewColor(value ...color.Attribute) *color.Color
 func NewStruct(v Any) *structs.Struct
+func PrepValues(got, want Any) (AnyValue, AnyValue)
 func RandomGreek(length, minGreekPct, maxGreekPct int) string
 func RandomGreekString(n int) string
 func RandomString(n int) string
+func Rec()
 func ShowFrequency(s string) string
+func TAssertEqual(t *testing.T, name string, got, want Any)
+func TAssertType(t *testing.T, name string, got, want reflect.Kind)
+func TError(t *testing.T, name string, got, want Any)
+func TName(testname, funcname, argname Any) string
+func TRun(t *testing.T, name string, got, want Any)
+func TTypeError(t *testing.T, name string, got, want Any)
+func TTypeRun(t *testing.T, name string, got, want Any)
 func TerminalExample()
 func ToString(a Any) string
+func ToValues(list []Any) []reflect.Value
 func TypeOf(a Any) reflect.Type
 func ValueOf(i interface{}) reflect.Value
 func WithLock(lk Locker, fn func())
@@ -39,7 +56,10 @@ func NewKindInfo(a Any) kindInfo
 type Any = interface{}
     func Interface(v reflect.Value) Any
 type AnyValue interface{ ... }
+    func GetAnyValues(args ...Any) []AnyValue
     func NewAnyValue(a Any) AnyValue
+type Arg interface{}
+type Assert interface{ ... }
 type Attribute = color.Attribute
 type Closer interface{ ... }
 type Color = color.Color
@@ -49,17 +69,24 @@ type Connecter interface{ ... }
 type Conner interface{ ... }
 type Cosa struct{}
 type Cruder interface{ ... }
+type Custom interface{ ... }
 type DB interface{}
 type Enabler interface{ ... }
 type Errer interface{ ... }
 type Formatter interface{ ... }
 type Fprinter interface{ ... }
+type Function interface{ ... }
+type FunctionCaller interface{ ... }
 type GetSetter interface{ ... }
+type GoCode interface{ ... }
 type Kind = reflect.Kind
 type KindInfo interface{ ... }
 type Locker interface{ ... }
+type Node interface{}
+    func BuildNodes() Node
 type Printer interface{ ... }
 type Protector interface{ ... }
+type Random interface{ ... }
 type Result interface{ ... }
 type Row = sql.Row
 type Rower interface{ ... }
@@ -73,6 +100,10 @@ type State interface{ ... }
 type Stmter interface{ ... }
 type StringWriter interface{ ... }
 type Stringer interface{ ... }
+type TestRunner interface{ ... }
+    func NewTestSet(t *testing.T, name string, list []test) TestRunner
+type Tester interface{ ... }
+    func NewTest(t *testing.T, name string, got, want Any, wantErr bool, assert testFunc) Tester
 type TxOptions = sql.TxOptions
 type Txer interface{ ... }
 type Type = reflect.Type

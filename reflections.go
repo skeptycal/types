@@ -6,7 +6,7 @@ import (
 	"github.com/fatih/structs"
 )
 
-var nilStruct = &structs.Struct{}
+var NilStruct = &structs.Struct{}
 
 // ValueOf returns a new Value initialized to the concrete value stored in the interface i. ValueOf(nil) returns the zero Value.
 func ValueOf(i interface{}) reflect.Value {
@@ -56,9 +56,9 @@ func Interface(v reflect.Value) Any {
 		return v
 	}
 
-	if v.IsZero() {
-		return v
-	}
+	// if v.IsZero() {
+	// 	return v.Interface()
+	// }
 
 	if v.CanInterface() {
 		return v.Interface()
@@ -104,5 +104,5 @@ func NewStruct(v Any) *structs.Struct {
 	if KindOf(v) == reflect.Struct {
 		return structs.New(v)
 	}
-	return nilStruct
+	return NilStruct
 }

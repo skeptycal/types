@@ -7,8 +7,7 @@ import (
 )
 
 var (
-	log      = errorlogger.Log
-	_NEW_ANY = new_any
+	log = errorlogger.Log
 )
 
 type (

@@ -53,21 +53,21 @@ var reflectTests = []struct {
 func Test_ValueOf(t *testing.T) {
 	t.Parallel()
 	for _, tt := range reflectTests {
-		tRun(t, tt.name, NewAnyValue(tt.a).ValueOf(), ValueOf(tt.a))
+		TRun(t, tt.name, NewAnyValue(tt.a).ValueOf(), ValueOf(tt.a))
 	}
 }
 
 func Test_KindOf(t *testing.T) {
 	t.Parallel()
 	for _, tt := range reflectTests {
-		tRun(t, tt.name, NewAnyValue(tt.a).Kind(), KindOf(tt.a))
+		TRun(t, tt.name, NewAnyValue(tt.a).Kind(), KindOf(tt.a))
 	}
 }
 
 func Test_TypeOf(t *testing.T) {
 	t.Parallel()
 	for _, tt := range reflectTests {
-		tRun(t, tt.name, NewAnyValue(tt.a).TypeOf(), TypeOf(tt.a))
+		TRun(t, tt.name, NewAnyValue(tt.a).TypeOf(), TypeOf(tt.a))
 	}
 }
 
@@ -77,8 +77,8 @@ func Test_Indirect(t *testing.T) {
 	for _, tt := range reflectTests {
 		want := ValueOf(tt.a)
 		got := NewAnyValue(tt.a).Indirect().ValueOf()
-		name := tName(tt.name, tt.name, tt.a)
-		tRun(t, name, got, want)
+		name := TName(tt.name, tt.name, tt.a)
+		TRun(t, name, got, want)
 	}
 	// LimitResult = false
 }
@@ -93,32 +93,34 @@ func Test_Addr(t *testing.T) {
 			continue
 		}
 
-		name := tName(tt.name, tt.name, tt.a)
-		tRun(t, name, got, want.Addr())
+		name := TName(tt.name, tt.name, tt.a)
+		TRun(t, name, got, want.Addr())
 	}
 }
 
 func Test_Interface(t *testing.T) {
-	t.Parallel()
+	// defer leaktest.AfterTest(t)()
 	for _, tt := range reflectTests {
-		v := ValueOf(tt.a)
+		v := NewAnyValue(tt.a)
+		g := v.ValueOf()
 
-		got := Interface(v)
-
-		if !v.IsValid() {
+		if !g.CanInterface() {
 			continue
 		}
 
-		if v.IsZero() {
+		if !g.IsValid() || g.IsZero() {
 			continue
 		}
 
-		if !v.CanInterface() {
-			continue
-		}
+		got := v.Interface()
+		want := v.Interface()
 
-		name := tName(tt.name, tt.name, tt.a)
-		tRun(t, name, got, v.Interface())
+		// if want.Kind() != reflect.Ptr || want.Kind() != reflect.Interface {
+		// 	continue
+		// }
+
+		name := TName(tt.name, tt.name, tt.a)
+		TRun(t, name, got, want)
 	}
 }
 
@@ -131,8 +133,8 @@ func Test_Elem(t *testing.T) {
 		if want.Kind() != reflect.Ptr || want.Kind() != reflect.Interface {
 			continue
 		}
-		name := tName(tt.name, tt.name, tt.a)
-		tRun(t, name, got, want.Elem())
+		name := TName(tt.name, tt.name, tt.a)
+		TRun(t, name, got, want.Elem())
 	}
 }
 
@@ -157,8 +159,8 @@ func Test_Convert(t *testing.T) {
 			want = v.Convert(wantType).Interface()
 		}
 
-		name := tName(tt.name, tt.name, tt.a)
-		tRun(t, name, got, want)
+		name := TName(tt.name, tt.name, tt.a)
+		TRun(t, name, got, want)
 	}
 }
 
@@ -170,7 +172,7 @@ func TestNewStruct(t *testing.T) {
 		want *structs.Struct
 	}{
 		{"Cosa", Cosa{}, structs.New(Cosa{})},
-		{"int 42", nil, nilStruct},
+		{"int 42", nil, NilStruct},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

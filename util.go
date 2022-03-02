@@ -162,3 +162,11 @@ func ToString(a Any) string {
 	}
 	return fmt.Sprintf("%v", a)
 }
+
+func ToValues(list []Any) []reflect.Value {
+	retval := make([]reflect.Value, 0, len(list))
+	for _, item := range list {
+		retval = append(retval, reflect.ValueOf(item))
+	}
+	return retval
+}

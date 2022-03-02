@@ -1,163 +1,109 @@
 package types
 
-// var (
-// 	LimitResult            bool
-// 	DefaultTestResultLimit = 15
-// )
+import (
+	"fmt"
+	"reflect"
+	"testing"
+)
 
-// type (
-// 	test struct {
-// 		name    string
-// 		in      Any
-// 		got     Any
-// 		want    Any
-// 		wantErr bool
-// 	}
+var (
+	LimitResult            bool
+	DefaultTestResultLimit = 15
+)
 
-// 	// Assert implements the Tester interface. It is
-// 	// used for boolean only challenges. In addition
-// 	// to working seamlessly with the standard library
-// 	// testing package, it can return the bool
-// 	// result for use in alternate data collection
-// 	// or CI software.
-// 	Assert interface {
-// 		Tester
-// 		Result() bool
-// 	}
+type (
 
-// 	// Random implements Tester and  creates a random
-// 	// test that can be used to generate many varied
-// 	// tests automatically.
-// 	// After each use, Regenerate() can be called to
-// 	// generate a new test.
-// 	Random interface {
-// 		Tester
-// 		Regenerate()
-// 	}
+	// Assert implements the Tester interface. It is
+	// used for boolean only challenges. In addition
+	// to working seamlessly with the standard library
+	// testing package, it can return the bool
+	// result for use in alternate data collection
+	// or CI software.
+	Assert interface {
+		Tester
+		Result() bool
+	}
 
-// 	// Custom implements Tester and can be used to
-// 	// hook into existing software by passing in
-// 	// the various test arguments with Hook().
-// 	// Calling Hook() also calls Run() automaticaly.
-// 	Custom interface {
-// 		Tester
-// 		Hook(name string, got, want Any, wantErr bool)
-// 	}
+	// Random implements Tester and  creates a random
+	// test that can be used to generate many varied
+	// tests automatically.
+	// After each use, Regenerate() can be called to
+	// generate a new test.
+	Random interface {
+		Tester
+		Regenerate()
+	}
 
-// 	assert struct {
-// 		name   string
-// 		got    Any
-// 		want   Any
-// 		assert Assert
-// 	}
+	// Custom implements Tester and can be used to
+	// hook into existing software by passing in
+	// the various test arguments with Hook().
+	// Calling Hook() also calls Run() automaticaly.
+	Custom interface {
+		Tester
+		Hook(name string, got, want Any, wantErr bool)
+	}
 
-// 	testSet struct {
-// 		name string
-// 		t    *testing.T
-// 		list []test
-// 	}
+	assert struct {
+		name   string
+		got    Any
+		want   Any
+		assert Assert
+	}
+)
 
-// 	// Tester implements an individual test. It may
-// 	// be implemented by traditional tests,
-// 	// asserts, random inputs, or custom code.
-// 	Tester interface {
-
-// 		// Run runs an individual test.
-// 		Run(t *testing.T)
-// 	}
-
-// 	TestRunner interface {
-
-// 		// Run runs all tests in the set.
-// 		Run()
-// 	}
-// )
-
-// func NewTestSet(t *testing.T, name string, list []test) TestRunner {
-// 	return &testSet{
-// 		t:    t,
-// 		name: name,
-// 		list: list,
-// 	}
+// // Reset clears the list of tests
+// func (ts *testSet) reset() {
+// 	ts.list = []test{}
 // }
 
-// // Run runs all tests in the set.
-// func (ts *testSet) Run() {
-// 	for _, tt := range ts.list {
-// 		tt.Run(ts.t)
-// 	}
-// }
+func limitTestResultLength(v Any) string {
+	s := fmt.Sprintf("%v", v)
 
-// // // Reset clears the list of tests
-// // func (ts *testSet) reset() {
-// // 	ts.list = []test{}
-// // }
+	if len(s) > DefaultTestResultLimit && LimitResult {
+		return s[:DefaultTestResultLimit-3] + "..."
+	}
 
-// // Run runs the individual test
-// func (tt *test) Run(t *testing.T) {
-// 	tRunTest(t, tt)
-// }
+	return s
+}
 
-// func tRunTest(t *testing.T, tt *test) {
-// 	if NewAnyValue(tt.got).IsComparable() && NewAnyValue(tt.want).IsComparable() {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			if tt.got != tt.want != tt.wantErr {
-// 				if reflect.DeepEqual(tt.got, tt.want) == tt.wantErr {
-// 					tError(t, tt.name, tt.got, tt.want)
-// 				}
-// 			}
-// 		})
-// 	}
-// }
+func TName(testname, funcname, argname Any) string {
+	if argname == "" {
+		return fmt.Sprintf("%v: %v()", testname, funcname)
+	}
+	return fmt.Sprintf("%v: %v(%v)", testname, funcname, argname)
+}
 
-// func limitTestResultLength(v Any) string {
-// 	s := fmt.Sprintf("%v", v)
+func typeGuardExclude(needle Any, notAllowed []Any) bool {
+	return !Contains(needle, notAllowed)
+}
 
-// 	if len(s) > DefaultTestResultLimit && LimitResult {
-// 		return s[:DefaultTestResultLimit-3] + "..."
-// 	}
+func TTypeError(t *testing.T, name string, got, want Any) {
+	t.Errorf("%v = %v(%T), want %v(%T)", name, limitTestResultLength(got), got, limitTestResultLength(want), want)
+}
 
-// 	return s
-// }
+func TError(t *testing.T, name string, got, want Any) {
+	t.Errorf("%v = %v, want %v", name, limitTestResultLength(got), limitTestResultLength(want))
+}
+func TTypeRun(t *testing.T, name string, got, want Any) {
+	if NewAnyValue(got).IsComparable() && NewAnyValue(want).IsComparable() {
+		t.Run(name, func(t *testing.T) {
+			if got != want {
+				if !reflect.DeepEqual(got, want) {
+					TTypeError(t, name, got, want)
+				}
+			}
+		})
+	}
+}
 
-// func tName(testname, funcname, argname Any) string {
-// 	if argname == "" {
-// 		return fmt.Sprintf("%v: %v()", testname, funcname)
-// 	}
-// 	return fmt.Sprintf("%v: %v(%v)", testname, funcname, argname)
-// }
-
-// func typeGuardExclude(needle Any, notAllowed []Any) bool {
-// 	return !Contains(needle, notAllowed)
-// }
-
-// func tTypeError(t *testing.T, name string, got, want Any) {
-// 	t.Errorf("%v = %v(%T), want %v(%T)", name, limitTestResultLength(got), got, limitTestResultLength(want), want)
-// }
-
-// func tError(t *testing.T, name string, got, want Any) {
-// 	t.Errorf("%v = %v, want %v", name, limitTestResultLength(got), limitTestResultLength(want))
-// }
-// func tTypeRun(t *testing.T, name string, got, want Any) {
-// 	if NewAnyValue(got).IsComparable() && NewAnyValue(want).IsComparable() {
-// 		t.Run(name, func(t *testing.T) {
-// 			if got != want {
-// 				if !reflect.DeepEqual(got, want) {
-// 					tTypeError(t, name, got, want)
-// 				}
-// 			}
-// 		})
-// 	}
-// }
-
-// func tRun(t *testing.T, name string, got, want Any) {
-// 	if NewAnyValue(got).IsComparable() && NewAnyValue(want).IsComparable() {
-// 		t.Run(name, func(t *testing.T) {
-// 			if got != want {
-// 				if !reflect.DeepEqual(got, want) {
-// 					tError(t, name, got, want)
-// 				}
-// 			}
-// 		})
-// 	}
-// }
+func tRun(t *testing.T, name string, got, want Any) {
+	if NewAnyValue(got).IsComparable() && NewAnyValue(want).IsComparable() {
+		t.Run(name, func(t *testing.T) {
+			if got != want {
+				if !reflect.DeepEqual(got, want) {
+					TError(t, name, got, want)
+				}
+			}
+		})
+	}
+}

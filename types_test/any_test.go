@@ -9,10 +9,11 @@ import (
 )
 
 var (
-	// LimitResult  = benchmark.LimitResult
+	// LimitResult  = types.LimitResult
+	// TRun         = types.TRun
+	// BRun         = types.BRun
+	// TName        = types.TName
 	globalReturn bool
-
-	new_any = _NEW_ANY
 )
 
 /* IsComparable benchmarks
@@ -162,31 +163,6 @@ struct_method#27-8      	66478465	        18.08 ns/op	       0 B/op	       0 all
 interface_method#27-8   	56716915	        21.07 ns/op	       0 B/op	       0 allocs/op
 global_function#27-8    	56448120	        21.19 ns/op	       0 B/op	       0 allocs/op
 */
-func Benchmark_any_IsComparable(b *testing.B) {
-	for _, bb := range reflectTests {
-		a := new_any(bb.a)
-		AA := NewAnyValue(bb.a)
-
-		b.Run("struct method", func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				globalReturn = a.IsComparable()
-			}
-		})
-
-		b.Run("interface method", func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				globalReturn = AA.IsComparable()
-			}
-		})
-
-		b.Run("global function", func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				globalReturn = IsComparable(bb.a)
-			}
-		})
-
-	}
-}
 
 /* Benchmarks
 
@@ -280,61 +256,23 @@ struct_method#27-8      	70198698	        16.92 ns/op	       0 B/op	       0 all
 interface_method#27-8   	59796568	        20.35 ns/op	       0 B/op	       0 allocs/op
 global_function#27-8    	59468376	        20.21 ns/op	       0 B/op	       0 allocs/op
 */
-func Benchmark_any_IsOrdered(b *testing.B) {
-	for _, bb := range reflectTests {
-		a := new_any(bb.a)
-		AA := NewAnyValue(bb.a)
-
-		b.Run("struct method", func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				globalReturn = a.IsOrdered()
-			}
-		})
-
-		b.Run("interface method", func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				globalReturn = AA.IsOrdered()
-			}
-		})
-
-		b.Run("global function", func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				globalReturn = IsOrdered(bb.a)
-			}
-		})
-
-	}
-}
 
 func Test_any(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range reflectTests {
 		if tt.want != reflect.Func {
-			tRun(t, tt.name, NewAnyValue(tt.a).Interface(), tt.a)
+			TRun(t, tt.name, NewAnyValue(tt.a).Interface(), tt.a)
 		}
-	}
-}
-
-func Test_any_ValueOf(t *testing.T) {
-	t.Parallel()
-	for _, tt := range reflectTests {
-		a := new_any(tt.a)
-		A := NewAnyValue(tt.a)
-
-		tRun(t, tt.name, a.ValueOf(), ValueOf(tt.a))
-		tRun(t, tt.name, A.ValueOf(), ValueOf(tt.a))
 	}
 }
 
 func Test_any_TypeOf(t *testing.T) {
 	t.Parallel()
 	for _, tt := range reflectTests {
-		tRun(t, tt.name, new_any(tt.a).TypeOf(), TypeOf(tt.a))
-		tRun(t, tt.name, NewAnyValue(tt.a).TypeOf(), TypeOf(tt.a))
+		TRun(t, tt.name, NewAnyValue(tt.a).TypeOf(), TypeOf(tt.a))
 	}
 }
-
 func Test_any_Interface(t *testing.T) {
 	t.Parallel()
 	for _, tt := range reflectTests {
@@ -359,21 +297,13 @@ func Test_any_Interface(t *testing.T) {
 
 	}
 }
-
 func Test_any_Kind(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range reflectTests {
-		a := new_any(tt.a)
 		A := NewAnyValue(tt.a)
 		want := KindOf(tt.a)
-		got := a.Kind()
-		t.Run(tt.name+".Kind()", func(t *testing.T) {
-			if !reflect.DeepEqual(got, want) {
-				t.Errorf("Kind(%v) = %v, want %v", tt.a, got, want)
-			}
-		})
-		got = A.Kind()
+		got := A.Kind()
 		t.Run(tt.name+".Kind()", func(t *testing.T) {
 			if !reflect.DeepEqual(got, want) {
 				t.Errorf("Kind(%v) = %v, want %v", tt.a, got, want)
@@ -381,7 +311,6 @@ func Test_any_Kind(t *testing.T) {
 		})
 	}
 }
-
 func Test_any_Is_all(t *testing.T) {
 	t.Parallel()
 
@@ -441,7 +370,6 @@ func Test_any_Is_all(t *testing.T) {
 
 	}
 }
-
 func Test_any_Elem(t *testing.T) {
 	t.Parallel()
 	LimitResult = true
@@ -451,14 +379,13 @@ func Test_any_Elem(t *testing.T) {
 		v := ValueOf(tt.a)
 		a := NewAnyValue(tt.a)
 
-		name := tName(tt.name, tt.name, v)
-		tRun(t, name, a.Elem(), Elem(v))
+		name := TName(tt.name, tt.name, v)
+		TRun(t, name, a.Elem(), Elem(v))
 
 	}
 
 	LimitResult = false
 }
-
 func Test_any_Indirect(t *testing.T) {
 	t.Parallel()
 	LimitResult = true
@@ -466,12 +393,11 @@ func Test_any_Indirect(t *testing.T) {
 	for _, tt := range reflectTests {
 		want := ValueOf(tt.a)
 		got := NewAnyValue(tt.a).Indirect().ValueOf()
-		name := tName(tt.name, tt.name, tt.a)
-		tRun(t, name, got, want)
+		name := TName(tt.name, tt.name, tt.a)
+		TRun(t, name, got, want)
 	}
 	LimitResult = false
 }
-
 func Test_any_String(t *testing.T) {
 	t.Parallel()
 
@@ -496,13 +422,13 @@ func Test_any_String(t *testing.T) {
 		got := a.Elem()
 
 		// test raw struct (*any) as well as interface (AnyValue)
-		name := tName(tt.name, a.String(), a.ValueOf())
-		tRun(t, name, got, nil)
+		name := TName(tt.name, a.String(), a.ValueOf())
+		TRun(t, name, got, nil)
 
 	}
 	LimitResult = false
 
-	tRun(t, "AnyValue.String", NewAnyValue("fake").String(), "fake")
+	TRun(t, "AnyValue.String", NewAnyValue("fake").String(), "fake")
 }
 
 /*
