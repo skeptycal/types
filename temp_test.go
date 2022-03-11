@@ -14,7 +14,7 @@ func Benchmark_test_bRun(b *testing.B) {
 func Test_Panic(t *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Errorf("panic occurred: %v", err)
+			Log.Errorf("panic occurred: %v", err)
 			// t.Errorf("panic occurred: %v\n", err)
 			return
 		} else {

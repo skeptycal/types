@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	log = errorlogger.Log
+	Log = errorlogger.Log
 )
 
 type (

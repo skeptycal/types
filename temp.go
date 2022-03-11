@@ -13,18 +13,6 @@ var (
 	global       Any
 )
 
-func Rec() {
-	if r := recover(); r != nil {
-		log.Errorf("panic recovered from ", r)
-	}
-}
-
-func TRec(t *testing.T) {
-	if r := recover(); r != nil {
-		t.Errorf("panic recovered from: %v", r)
-	}
-}
-
 func TAssertType(t *testing.T, name string, got, want reflect.Kind) {
 	t.Helper()
 
@@ -37,7 +25,7 @@ func TAssertType(t *testing.T, name string, got, want reflect.Kind) {
 
 func TRun(t *testing.T, name string, got, want Any) {
 	if r := recover(); r != nil {
-		log.Errorf("panic recovered from ", r)
+		Log.Errorf("panic recovered from ", r)
 	}
 	// defer Rec()
 	t.Helper()
@@ -117,7 +105,7 @@ func BRun(b *testing.B, name string, function Any, args ...Any) {
 	defer func() {
 		if err := recover(); err != nil {
 			// log.Errorf("panic occurred: %v\n", err)
-			log.Errorf("panic occurred: %v\n", err)
+			Log.Errorf("panic occurred: %v\n", err)
 			b.FailNow()
 		}
 	}()
@@ -148,7 +136,7 @@ func BRun(b *testing.B, name string, function Any, args ...Any) {
 		for i := 0; i < b.N; i++ {
 			retval = fn(in)
 		}
-		log.Infof("benchmark results: %v", retval)
+		Log.Infof("benchmark results: %v", retval)
 		global = retval
 		b.ReportAllocs()
 	})

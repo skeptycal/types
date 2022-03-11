@@ -36,7 +36,7 @@ func NewColor(value ...color.Attribute) *color.Color {
 }
 
 func Attn(format string, args ...interface{}) {
-	log.Infof(ATTN.Sprintf(format, args...))
+	Log.Infof(ATTN.Sprintf(format, args...))
 }
 
 var myWriter = os.Stdout
@@ -46,7 +46,7 @@ func Blue(format string, args ...interface{}) (n int, err error) {
 }
 
 func Info(format string, args ...interface{}) {
-	log.Infof(INFO.Sprintf(format, args...))
+	Log.Infof(INFO.Sprintf(format, args...))
 }
 
 // constants from https://github.com/fatih/color
