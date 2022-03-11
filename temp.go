@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"io"
 	"reflect"
 	"testing"
@@ -25,7 +26,7 @@ func TAssertType(t *testing.T, name string, got, want reflect.Kind) {
 
 func TRun(t *testing.T, name string, got, want Any) {
 	if r := recover(); r != nil {
-		Log.Errorf("panic recovered from ", r)
+		Log.Errorf("panic recovered while testing %v: %v", name, r)
 	}
 	// defer Rec()
 	t.Helper()
@@ -51,16 +52,16 @@ func TAssertEqual(t *testing.T, name string, got, want Any) {
 }
 
 // checkRetVal calls an error if retval is false
-func checkRetVal(t *testing.T, msg string, retval bool, got, want AnyValue) {
+func checkRetVal(t *testing.T, msg string, retval bool) {
 	if !retval {
-		TError(t, msg, got, want)
+		TError(t, msg, retval, false)
 	}
 }
 
 func AssertComparable(t *testing.T, got, want Any) (retval bool) {
 	g, w := PrepValues(got, want)
 	retval = g.IsComparable() && w.IsComparable()
-	checkRetVal(t, "values are not comparable", retval, g, w)
+	checkRetVal(t, fmt.Sprintf("values are not comparable: %v(%T), %v(%T)", got, want, got, want), retval)
 	return
 }
 

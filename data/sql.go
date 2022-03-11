@@ -1,4 +1,4 @@
-package types
+package datatypes
 
 // types/sql.go contains interfaces that implement
 // methods contained in the standard library sql
@@ -8,6 +8,8 @@ import (
 	"context"
 	"database/sql"
 	"reflect"
+
+	"github.com/skeptycal/types"
 )
 
 type (
@@ -15,6 +17,9 @@ type (
 	Rows       = sql.Rows
 	ColumnType = sql.ColumnType
 	TxOptions  = sql.TxOptions
+
+	Closer = types.Closer
+	Errer  = types.Errer
 
 	DB interface{}
 

@@ -1,12 +1,15 @@
-package types
+package datatypes
 
 import (
 	"fmt"
 	"strings"
 
 	"github.com/fatih/structs"
+	"github.com/skeptycal/types"
 	"golang.org/x/sys/cpu"
 )
+
+type Any = types.Any
 
 func CPUOptionsAvailable() string {
 	sb := strings.Builder{}

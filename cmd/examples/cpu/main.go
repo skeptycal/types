@@ -1,11 +1,6 @@
 package main
 
-import (
-	"fmt"
-
-	"github.com/skeptycal/types"
-)
-
 func main() {
-	fmt.Print(types.CPUOptions())
+	// TODO: move this to datatypes package
+	// fmt.Print(datatypes.CPUOptions())
 }

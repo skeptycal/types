@@ -17,8 +17,6 @@ func Attn(format string, args ...interface{})
 func BRun(b *testing.B, name string, function Any, args ...Any)
 func BTest(b *testing.B, text string, got, want Any) bool
 func Blue(format string, args ...interface{}) (n int, err error)
-func CPUOptions() string
-func CPUOptionsAvailable() string
 func Contains(needle Any, haystack []Any) bool
 func Convert(v reflect.Value, typ reflect.Type) reflect.Value
 func Count(needle Any, haystack []Any) int
@@ -29,7 +27,6 @@ func GetFileListBySuffix(path, suffix string) (files []string, err error)
 func GetFileListWithDirectories(path string) (files []string, err error)
 func GetGoFileList() (files []string, err error)
 func GuardReflectType(v reflect.Value) reflect.Type
-func HasAVX2() bool
 func HasAlternate(v Any) bool
 func Indirect(v reflect.Value) reflect.Value
 func Info(format string, args ...interface{})
@@ -77,14 +74,8 @@ type Attribute = color.Attribute
     const BgHiBlack Attribute = iota + 100 ...
 type Closer interface{ ... }
 type Color = color.Color
-type ColumnType = sql.ColumnType
-type ColumnTyper interface{ ... }
-type Connecter interface{ ... }
-type Conner interface{ ... }
 type Cosa struct{}
-type Cruder interface{ ... }
 type Custom interface{ ... }
-type DB interface{}
 type Enabler interface{ ... }
 type Errer interface{ ... }
 type Formatter interface{ ... }
@@ -101,24 +92,15 @@ type Node interface{}
 type Printer interface{ ... }
 type Protector interface{ ... }
 type Random interface{ ... }
-type Result interface{ ... }
-type Row = sql.Row
-type Rower interface{ ... }
-type Rows = sql.Rows
-type Rowser interface{ ... }
-type Scanner interface{ ... }
 type Slicer interface{ ... }
 type Sorter interface{ ... }
 type Sprinter interface{ ... }
 type State interface{ ... }
-type Stmter interface{ ... }
 type StringWriter interface{ ... }
 type Stringer interface{ ... }
 type TestRunner interface{ ... }
     func NewTestSet(t *testing.T, name string, list []test) TestRunner
 type Tester interface{ ... }
     func NewTest(t *testing.T, name string, got, want Any, wantErr bool, assert testFunc) Tester
-type TxOptions = sql.TxOptions
-type Txer interface{ ... }
 type Type = reflect.Type
 type Writer interface{ ... }

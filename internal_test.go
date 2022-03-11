@@ -1,5 +1,7 @@
 package types
 
+import "testing"
+
 func TestTerminal(t *testing.T) {
 	t.Parallel()
 	if IsTerminal != isTerminal() {

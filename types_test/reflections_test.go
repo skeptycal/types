@@ -105,7 +105,11 @@ func Test_Interface(t *testing.T) {
 	t.Parallel()
 	// defer leaktest.AfterTest(t)()
 	for _, tt := range reflectTests {
-		defer TRec(t)
+		defer func() {
+			if r := recover(); r != nil {
+				log.Errorf("TestBench: recovered from panic while testing interface %v: %v", tt.name, r)
+			}
+		}()
 
 		v := NewAnyValue(tt.a)
 		if !v.ValueOf().IsValid() {
