@@ -1,11 +1,9 @@
-package types_test
+package types
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
-
-	. "github.com/skeptycal/types"
 )
 
 var (
@@ -258,7 +256,6 @@ global_function#27-8    	59468376	        20.21 ns/op	       0 B/op	       0 all
 */
 
 func Test_any(t *testing.T) {
-	t.Parallel()
 
 	for _, tt := range reflectTests {
 		if tt.want != reflect.Func {
@@ -268,13 +265,11 @@ func Test_any(t *testing.T) {
 }
 
 func Test_any_TypeOf(t *testing.T) {
-	t.Parallel()
 	for _, tt := range reflectTests {
 		TRun(t, tt.name, NewAnyValue(tt.a).TypeOf(), TypeOf(tt.a))
 	}
 }
 func Test_any_Interface(t *testing.T) {
-	t.Parallel()
 	for _, tt := range reflectTests {
 		if tt.name == "Func" {
 			continue
@@ -294,12 +289,9 @@ func Test_any_Interface(t *testing.T) {
 				t.Errorf("Interface(%v) = %v(%T), want %v(%T)", tt.name, got, got, want, want)
 			}
 		})
-
 	}
 }
 func Test_any_Kind(t *testing.T) {
-	t.Parallel()
-
 	for _, tt := range reflectTests {
 		A := NewAnyValue(tt.a)
 		want := KindOf(tt.a)
@@ -312,7 +304,6 @@ func Test_any_Kind(t *testing.T) {
 	}
 }
 func Test_any_Is_all(t *testing.T) {
-	t.Parallel()
 
 	for _, tt := range reflectTests {
 		// a := new_any(tt.a)
@@ -371,7 +362,6 @@ func Test_any_Is_all(t *testing.T) {
 	}
 }
 func Test_any_Elem(t *testing.T) {
-	t.Parallel()
 	LimitResult = true
 
 	for _, tt := range reflectTests {
@@ -387,7 +377,6 @@ func Test_any_Elem(t *testing.T) {
 	LimitResult = false
 }
 func Test_any_Indirect(t *testing.T) {
-	t.Parallel()
 	LimitResult = true
 
 	for _, tt := range reflectTests {
@@ -399,7 +388,6 @@ func Test_any_Indirect(t *testing.T) {
 	LimitResult = false
 }
 func Test_any_String(t *testing.T) {
-	t.Parallel()
 
 	LimitResult = true
 

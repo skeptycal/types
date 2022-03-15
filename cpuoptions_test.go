@@ -5,7 +5,6 @@ package types_test
 // )
 
 // func TestHasAVX2(t *testing.T) {
-// 	t.Parallel()
 // 	tests := []struct {
 // 		name string
 // 		want bool
@@ -19,8 +18,7 @@ package types_test
 // }
 
 // func TestCPUOptions(t *testing.T) {
-// 	t.Parallel()
-// 	tests := []struct {
+// 	// 	tests := []struct {
 // 		name string
 // 		want string
 // 	}{
@@ -35,8 +33,7 @@ package types_test
 // }
 
 // func TestCPUOptionsAvailable(t *testing.T) {
-// 	t.Parallel()
-// 	tests := []struct {
+// 	// 	tests := []struct {
 // 		name string
 // 		want string
 // 	}{

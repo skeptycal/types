@@ -51,7 +51,6 @@ var reflectTests = []struct {
 }
 
 func Test_ValueOf(t *testing.T) {
-	t.Parallel()
 	for _, tt := range reflectTests {
 		name := TName(tt.name, "ValueOf()", tt.a)
 		TRun(t, name, NewAnyValue(tt.a).ValueOf(), ValueOf(tt.a))
@@ -59,7 +58,6 @@ func Test_ValueOf(t *testing.T) {
 }
 
 func Test_KindOf(t *testing.T) {
-	t.Parallel()
 	for _, tt := range reflectTests {
 		name := TName(tt.name, "KindOf()", tt.a)
 		TRun(t, name, NewAnyValue(tt.a).Kind(), KindOf(tt.a))
@@ -67,7 +65,6 @@ func Test_KindOf(t *testing.T) {
 }
 
 func Test_TypeOf(t *testing.T) {
-	t.Parallel()
 	for _, tt := range reflectTests {
 		name := TName(tt.name, "TypeOf()", tt.a)
 		TRun(t, name, NewAnyValue(tt.a).TypeOf(), TypeOf(tt.a))
@@ -75,7 +72,6 @@ func Test_TypeOf(t *testing.T) {
 }
 
 func Test_Indirect(t *testing.T) {
-	t.Parallel()
 	// LimitResult = true
 	for _, tt := range reflectTests {
 		want := ValueOf(tt.a)
@@ -87,7 +83,6 @@ func Test_Indirect(t *testing.T) {
 }
 
 func Test_Addr(t *testing.T) {
-	t.Parallel()
 	for _, tt := range reflectTests {
 		want := ValueOf(tt.a)
 		got := Addr(want)
@@ -102,7 +97,6 @@ func Test_Addr(t *testing.T) {
 }
 
 func Test_Interface(t *testing.T) {
-	t.Parallel()
 	// defer leaktest.AfterTest(t)()
 	for _, tt := range reflectTests {
 		defer func() {
@@ -125,7 +119,6 @@ func Test_Interface(t *testing.T) {
 }
 
 func Test_Elem(t *testing.T) {
-	t.Parallel()
 	for _, tt := range reflectTests {
 		want := ValueOf(tt.a)
 		got := Elem(want)
@@ -139,7 +132,6 @@ func Test_Elem(t *testing.T) {
 }
 
 func Test_Convert(t *testing.T) {
-	t.Parallel()
 
 	wantType := ValueOf(int(42)).Type()
 
@@ -165,7 +157,6 @@ func Test_Convert(t *testing.T) {
 }
 
 func TestNewStruct(t *testing.T) {
-	t.Parallel()
 	tests := []struct {
 		name string
 		v    Any

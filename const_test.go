@@ -7,7 +7,6 @@ import (
 )
 
 func TestConst(t *testing.T) {
-	t.Parallel()
 	var (
 		esc     byte = '\x1b'
 		nl      byte = '\n'
