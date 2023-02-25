@@ -8,7 +8,7 @@ require (
 	github.com/mattn/go-isatty v0.0.14
 	github.com/sirupsen/logrus v1.8.1
 	github.com/skeptycal/errorlogger v0.4.0
-	golang.org/x/sys v0.0.0-20220224120231-95c6836cb0e7
+	golang.org/x/sys v0.1.0
 )
 
 require (
